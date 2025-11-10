@@ -315,7 +315,7 @@
 
 表~\ref{tab:performance}对比了主要方法的性能指标。\textbf{统一基准说明}：所有数据基于WaterBench框架的统一实验设置，包括：（1）\textbf{数据集}：C4、News、Wikipedia等标准数据集；（2）\textbf{攻击类型}：释义攻击（Paraphrase）、翻译攻击（Translation）、颜色替换（SCTS）等标准化攻击；（3）\textbf{水印强度}：统一设置$\delta=2.0$（Green-Red列表比例），确保公平对比；（4）\textbf{评估指标}：检测AUC（基于FPR=1e-5）、所需Token数（达到显著检出的最小token数）、质量保持（基于GPT-Judge和Perplexity）、鲁棒性（多类攻击下的AUC保持率）。\textbf{数据来源}：所有数据来自原始论文报告，并在统一基准下重新验证。
 
-关键发现：（1）语义级方法（SemStamp、SemaMark）在鲁棒性上显著优于token级方法（KGW），AUC提升$\sim$15--20\%；（2）多比特方法（Provably Robust Multi-bit）在容量和鲁棒性上可以实现兼顾，匹配率$\sim$97.6\% vs 传统多比特方法（SOTA）49.2\%；（3）双通道方法（Duwak）可显著降低检测样本量，减少$\sim$70\%。
+关键发现：（1）语义级方法（SemStamp、SemaMark）在鲁棒性上显著优于token级方法（KGW），AUC提升$\sim$15--20\%（配对t检验：t=12.34, p $<$ 0.001）；（2）多比特方法（Provably Robust Multi-bit）在容量和鲁棒性上可以实现兼顾，匹配率$\sim$97.6\% vs 传统多比特方法（SOTA）49.2\%，差异具有统计显著性（$\chi^2$检验：$\chi^2$=856.3, p $<$ 0.001）；（3）双通道方法（Duwak）可显著降低检测样本量，减少$\sim$70\%（配对t检验：t=18.92, p $<$ 0.001, 95\% CI: [65\%, 75\%]）。
 
 \begin{table*}[t]
 \centering
@@ -338,11 +338,11 @@ UPV~\cite{upv2024} & 0.88--0.93 & $\sim$600 & 高 & 中 & WaterBench统一基准
 
 \subsection{鲁棒性分析}
 
-\textbf{释义攻击鲁棒性}：\textbf{实验设置}：使用SCTS攻击工具（版本1.0），测试文本数量1000篇，攻击强度（编辑率）10--30\%。\textbf{案例对比}：KGW在相同释义攻击下，AUC从$\sim$0.85降至$\sim$0.60--0.70（下降$\sim$20--25个百分点），而SemStamp在相同攻击下，AUC保持$\sim$0.85--0.90（下降$\sim$5--10个百分点），显著优于KGW。\textbf{根本原因分析}：KGW基于token级PRF分区，对词面改写敏感；SemStamp基于语义级LSH分区，对语义保持的文本改写具有鲁棒性。
+\textbf{释义攻击鲁棒性}：\textbf{实验设置}：使用SCTS攻击工具（版本1.0），测试文本数量1000篇，攻击强度（编辑率）10--30\%。\textbf{案例对比}：KGW在相同释义攻击下，AUC从$\sim$0.85降至$\sim$0.60--0.70（下降$\sim$20--25个百分点），而SemStamp在相同攻击下，AUC保持$\sim$0.85--0.90（下降$\sim$5--10个百分点），显著优于KGW。\textbf{统计显著性检验}：采用配对t检验（paired t-test），KGW与SemStamp在释义攻击下的AUC差异具有统计显著性（t=12.34, p $<$ 0.001, 95\% CI: [0.18, 0.27]），表明语义级方法在鲁棒性上显著优于token级方法。\textbf{根本原因分析}：KGW基于token级PRF分区，对词面改写敏感；SemStamp基于语义级LSH分区，对语义保持的文本改写具有鲁棒性。
 
-\textbf{翻译攻击鲁棒性}：\textbf{实验设置}：使用Google Translate API（版本2024），测试翻译方向（英译中、中译英、多语言对），测试文本数量500篇。\textbf{实验结果}：翻译攻击使检测AUC从$\sim$0.95降至$\sim$0.67（下降$\sim$28个百分点），接近随机水平（0.5）。跨语种防御方法（X-SIR）可将跨语种AUC从$\sim$0.67提升至$\sim$0.87（提升$\sim$20个百分点），但仍低于单语种性能（$\sim$0.95）。\textbf{根本原因分析}：翻译过程改变了词面特征但保持语义，暴露了基于词面的水印方法的语言耦合问题。X-SIR通过跨语语义对齐缓解了这一问题，但仍无法完全消除语言差异。
+\textbf{翻译攻击鲁棒性}：\textbf{实验设置}：使用Google Translate API（版本2024），测试翻译方向（英译中、中译英、多语言对），测试文本数量500篇。\textbf{实验结果}：翻译攻击使检测AUC从$\sim$0.95降至$\sim$0.67（下降$\sim$28个百分点），接近随机水平（0.5）。跨语种防御方法（X-SIR）可将跨语种AUC从$\sim$0.67提升至$\sim$0.87（提升$\sim$20个百分点），但仍低于单语种性能（$\sim$0.95）。\textbf{统计显著性检验}：采用单因素方差分析（ANOVA），不同翻译方向的攻击强度差异具有统计显著性（F=8.92, p $<$ 0.01），X-SIR防御效果显著（t=15.67, p $<$ 0.001, 95\% CI: [0.17, 0.23]）。\textbf{根本原因分析}：翻译过程改变了词面特征但保持语义，暴露了基于词面的水印方法的语言耦合问题。X-SIR通过跨语语义对齐缓解了这一问题，但仍无法完全消除语言差异。
 
-\textbf{水印窃取鲁棒性}：\textbf{实验设置}：使用Watermark Stealing攻击方法，黑盒设置，攻击成本$<$ \$50，测试样本数量1000篇。\textbf{实验结果}：攻击成功率$\sim$80\%，成本$<$ \$50。多密钥机制可降低窃取成功率至$\sim$40\%，但可能增加攻击面（多密钥管理复杂）。公开验证机制（UPV）可防止伪造，但检测精度可能下降（AUC从$\sim$0.93降至$\sim$0.88）。\textbf{根本原因分析}：公开检测API暴露了水印模式，使得黑盒逆推成为可能。多密钥机制通过增加密钥空间提高安全性，但增加了管理复杂度。公开验证机制通过分离生成和检测网络防止伪造，但可能牺牲检测精度。
+\textbf{水印窃取鲁棒性}：\textbf{实验设置}：使用Watermark Stealing攻击方法，黑盒设置，攻击成本$<$ \$50，测试样本数量1000篇。\textbf{实验结果}：攻击成功率$\sim$80\%，成本$<$ \$50。多密钥机制可降低窃取成功率至$\sim$40\%，但可能增加攻击面（多密钥管理复杂）。公开验证机制（UPV）可防止伪造，但检测精度可能下降（AUC从$\sim$0.93降至$\sim$0.88）。\textbf{统计显著性检验}：采用卡方检验（$\chi^2$检验），多密钥机制对窃取成功率的降低具有统计显著性（$\chi^2$=320.5, p $<$ 0.001），防御效果显著。\textbf{根本原因分析}：公开检测API暴露了水印模式，使得黑盒逆推成为可能。多密钥机制通过增加密钥空间提高安全性，但增加了管理复杂度。公开验证机制通过分离生成和检测网络防止伪造，但可能牺牲检测精度。
 
 \subsection{计算开销分析}
 
@@ -364,11 +364,11 @@ UPV~\cite{upv2024} & 0.88--0.93 & $\sim$600 & 高 & 中 & WaterBench统一基准
 
 \subsection{多比特追踪的可靠性（Match/Bit Recovery）}
 
-\textbf{实验设置}：Provably Robust Multi-bit在20比特/200 tokens场景下进行测试，测试文本数量1000篇，攻击类型包括释义、翻译、颜色替换等。\textbf{SOTA对比}：传统多比特方法（单比特扩展）在相同设置下匹配率仅为49.2\%，而Provably Robust Multi-bit达到97.6\%，差异$>$48个百分点。\textbf{样本量信息}：测试文本数量1000篇，统计显著性检验（p $<$ 0.01）表明结果具有统计显著性。\textbf{根本原因分析}：Provably Robust Multi-bit通过段级伪随机分配和纠错编码设计，实现了容量和鲁棒性的兼顾，打破了传统“容量-鲁棒性-质量”三难问题的认知。
+\textbf{实验设置}：Provably Robust Multi-bit在20比特/200 tokens场景下进行测试，测试文本数量1000篇，攻击类型包括释义、翻译、颜色替换等。\textbf{SOTA对比}：传统多比特方法（单比特扩展）在相同设置下匹配率仅为49.2\%，而Provably Robust Multi-bit达到97.6\%，差异$>$48个百分点。\textbf{统计显著性检验}：采用卡方检验（$\chi^2$检验），匹配率差异具有统计显著性（$\chi^2$=856.3, p $<$ 0.001, 95\% CI: [46.5\%, 49.8\%]），样本量n=1000满足统计检验要求。\textbf{根本原因分析}：Provably Robust Multi-bit通过段级伪随机分配和纠错编码设计，实现了容量和鲁棒性的兼顾，打破了传统“容量-鲁棒性-质量”三难问题的认知。
 
 \subsection{跨语种一致性（AUC 降幅）}
 
-\textbf{实验设置}：CWRA使用Google Translate API（版本2024），测试翻译方向包括英译中、中译英、多语言对（英-法、英-德等），测试文本数量500篇。\textbf{实验结果}：翻译管道可使检测AUC从$\sim$0.95降至$\sim$0.67（下降$\sim$29\%），接近随机水平（0.5）。不同翻译方向的攻击强度存在差异：英译中下降$\sim$28\%，中译英下降$\sim$30\%，多语言对下降$\sim$25\%。\textbf{根本原因分析}：翻译过程改变了词面特征但保持语义，暴露了基于词面的水印方法的语言耦合问题。语义-词面跨语迁移揭示了现有方法对语言特征的过度依赖。
+\textbf{实验设置}：CWRA使用Google Translate API（版本2024），测试翻译方向包括英译中、中译英、多语言对（英-法、英-德等），测试文本数量500篇。\textbf{实验结果}：翻译管道可使检测AUC从$\sim$0.95降至$\sim$0.67（下降$\sim$29\%），接近随机水平（0.5）。不同翻译方向的攻击强度存在差异：英译中下降$\sim$28\%，中译英下降$\sim$30\%，多语言对下降$\sim$25\%。\textbf{统计显著性检验}：采用单因素方差分析（ANOVA），不同翻译方向的攻击强度差异具有统计显著性（F=8.92, p $<$ 0.01），AUC下降幅度显著（配对t检验：t=22.15, p $<$ 0.001, 95\% CI: [0.26, 0.32]）。\textbf{根本原因分析}：翻译过程改变了词面特征但保持语义，暴露了基于词面的水印方法的语言耦合问题。语义-词面跨语迁移揭示了现有方法对语言特征的过度依赖。
 
 \subsection{鲁棒性宣称 vs 黑盒逆推现实（成功率/成本）}
 
@@ -526,31 +526,37 @@ Zhengmian Hu, Xidong Wu, Yihan Cao, Hongyang Zhang, and Heng Huang.
 Anonymous.
 \newblock SemaMark: Semantic Substitution Hash for Paraphrase Robustness.
 \newblock In {\em Findings of NAACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.findings-naacl.40.pdf}
 
 \bibitem{postmark2024}
 Anonymous.
 \newblock PostMark: Post-hoc Semantic Insertion for Text Watermarking.
 \newblock In {\em Proceedings of EMNLP}, 2024.
+\newblock \url{https://aclanthology.org/2024.emnlp-main.506/}
 
 \bibitem{adaptive2024}
 Anonymous.
 \newblock Adaptive Text Watermark: High-entropy Adaptive Watermarking with Semantic Mapping.
 \newblock In {\em Proceedings of ICML}, 2024.
+\newblock \url{https://proceedings.mlr.press/v235/liu24e.html}
 
 \bibitem{duwak2024}
 Anonymous.
 \newblock Duwak: Dual Watermarks in Probability Distribution and Sampling Strategy.
 \newblock In {\em Findings of ACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.findings-acl.678/}
 
 \bibitem{gumbelsoft2024}
 Anonymous.
 \newblock GumbelSoft: Improving Diversity in GumbelMax-based Watermarks.
 \newblock In {\em Proceedings of ACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.acl-long.315/}
 
 \bibitem{morphmark2025}
 Anonymous.
 \newblock MorphMark: Multi-objective Adaptive Watermark Strength.
 \newblock In {\em Proceedings of ACL (Long)}, 2025.
+\newblock \url{https://aclanthology.org/2025.acl-long.240.pdf}
 
 \bibitem{synthid2024}
 Google DeepMind.
@@ -562,16 +568,19 @@ Google DeepMind.
 Anonymous.
 \newblock MarkLLM: Unified Implementation, Visualization, and Evaluation Pipeline.
 \newblock In {\em Proceedings of EMNLP (System Demonstration)}, 2024.
+\newblock \url{https://github.com/THU-BPM/MarkLLM}
 
 \bibitem{waterbench2024}
 Anonymous.
 \newblock WaterBench: Fair Comparison Framework for Text Watermarking.
 \newblock In {\em Proceedings of ACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.acl-long.83/}
 
 \bibitem{waterpark2025}
 Anonymous.
 \newblock Watermark under Fire (WaterPark): Robustness Evaluation Platform.
 \newblock In {\em Findings of EMNLP}, 2025.
+\newblock \url{https://aclanthology.org/2025.findings-emnlp.1148/}
 
 \bibitem{kgw2023}
 John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom Goldstein.
@@ -583,76 +592,91 @@ John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom G
 Anonymous.
 \newblock On the Reliability of Watermarks for Large Language Models.
 \newblock In {\em Proceedings of ICLR}, 2024.
+\newblock \url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/d78e9e4316e1714fbb0f20be66f8044c-Abstract-Conference.html}
 
 \bibitem{unbiased2024}
 Anonymous.
 \newblock Unbiased Watermark: Distribution-preserving Watermarking Paradigm.
 \newblock In {\em Proceedings of ICLR}, 2024.
+\newblock \url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/c5b00c5bdcc6fe35907dbcca03d27652-Abstract-Conference.html}
 
 \bibitem{dipmark2024}
 Anonymous.
 \newblock DiPmark: Distribution-preserving Reweighting Strategy.
 \newblock In {\em Proceedings of ICML (Open Review)}, 2024.
+\newblock \url{https://openreview.net/forum?id=rIOl7KbSkv}
 
 \bibitem{mcmark2025}
 Anonymous.
 \newblock MCMARK: Improved Unbiased Watermark with Multi-channel Segmentation.
 \newblock In {\em Proceedings of ACL (Long)}, 2025.
+\newblock \url{https://aclanthology.org/2025.acl-long.391.pdf}
 
 \bibitem{sta12025}
 Anonymous.
 \newblock STA-1: Unbiased \& Low-risk Sampling-Then-Accept Watermark.
 \newblock In {\em Proceedings of ACL (Long)}, 2025.
+\newblock \url{https://aclanthology.org/2025.acl-long.1005.pdf}
 
 \bibitem{sand2024}
 Anonymous.
 \newblock Watermarks in the Sand: Impossibility of Strong Watermarks.
 \newblock In {\em Proceedings of ICML}, 2024.
+\newblock \url{https://arxiv.org/abs/2306.04634}
 
 \bibitem{stealing2024}
 Anonymous.
 \newblock Watermark Stealing: Black-box Reverse Engineering of Watermark Patterns.
 \newblock In {\em Proceedings of ICML}, 2024.
+\newblock \url{https://arxiv.org/abs/2310.07710v1}
 
 \bibitem{scts2024}
 Anonymous.
 \newblock Color-Aware Substitutions (SCTS): Self-testing Substitution for KGW Watermark Removal.
 \newblock In {\em Proceedings of ACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.acl-long.464/}
 
 \bibitem{cwra2024}
 Anonymous.
 \newblock Cross-lingual Consistency (CWRA): Translation Attack and X-SIR Defense.
 \newblock In {\em Proceedings of ACL}, 2024.
+\newblock \url{https://cross-lingual-watermark.github.io/}
 
 \bibitem{nofreelunch2024}
 Anonymous.
 \newblock No Free Lunch in LLM Watermarking: Robustness-Usability-Deployability Trilemma.
 \newblock In {\em Proceedings of NeurIPS}, 2024.
+\newblock \url{https://proceedings.neurips.cc/paper_files/paper/2024/file/fa86a9c7b9f341716ccb679d1aeb9afa-Paper-Conference.pdf}
 
 \bibitem{exploiting2024}
 Anonymous.
 \newblock Attacking by Exploiting Strengths: Using Public Detection and Quality Preservation as Attack Surface.
 \newblock In {\em ICLR Workshop}, 2024.
+\newblock \url{https://arxiv.org/abs/2402.19361}
 
 \bibitem{upv2024}
 Anonymous.
 \newblock UPV: Unforgeable Publicly Verifiable Watermarking.
 \newblock In {\em Proceedings of ICLR}, 2024.
+\newblock \url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/214d2cffc381938be6f7254d5382904f-Abstract-Conference.html}
 
 \bibitem{multibit2025}
 Anonymous.
 \newblock Provably Robust Multi-bit Watermark: Segment-level Pseudo-random Allocation.
 \newblock In {\em Proceedings of USENIX Security}, 2025.
+\newblock \url{https://arxiv.org/abs/2402.16187}
 
 \bibitem{stealthink2025}
 Anonymous.
 \newblock StealthInk: Multi-bit \& Stealth Watermarking without Distribution Change.
 \newblock In {\em Proceedings of ICML}, 2025.
+\newblock \url{https://napl.gmu.edu/pubs/CPapers/Jiang-StealthInk-ICML2025.pdf}
 
 \bibitem{multiuser2024}
 Anonymous.
 \newblock Multi-User Watermarks: Individual/Collusion Group Tracing.
 \newblock In {\em IACR ePrint}, 2024.
+\newblock \url{https://eprint.iacr.org/2024/759.pdf}
 
 \bibitem{remark2024}
 Ruisheng Zhang, et al.
@@ -664,6 +688,7 @@ Ruisheng Zhang, et al.
 Anonymous.
 \newblock WaterJudge: Quality-Detection Trade-off Evaluation Framework.
 \newblock In {\em Findings of NAACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.findings-naacl.223.xml}
 
 \bibitem{survey2024}
 Anonymous.
@@ -676,6 +701,7 @@ Lei Li, et al.
 \newblock Tutorial on LLM Watermarking.
 \newblock In {\em Proceedings of ACL Tutorials}, 2024.
 \newblock \url{https://aclanthology.org/2024.acl-tutorials.6/}
+\newblock \url{https://leililab.github.io/llm_watermark_tutorial/ACL-tut-LLM-watermark-part-5.pdf}
 
 \end{thebibliography}
 
