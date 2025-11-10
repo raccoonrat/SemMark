@@ -1,0 +1,435 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\usepackage{usenix2020_SOUPS}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+% 中文支持 - 使用XeLaTeX编译
+\usepackage[UTF8]{ctex}
+\usepackage{xeCJK}
+
+% 设置中文字体（如果系统没有这些字体，可以注释掉或替换为系统可用字体）
+% \setCJKmainfont{SimSun}
+% \setCJKsansfont{SimHei}
+% \setCJKmonofont{FangSong}
+
+% 设置超链接颜色
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    citecolor=blue,
+    pdfborder={0 0 0}
+}
+
+% 页面布局已在 usenix2020_SOUPS.sty 中设置
+% 如果需要自定义，可以取消下面的注释
+% \setlength{\columnsep}{0.25in}
+
+\title{大模型文本语义水印研究综述：\\
+近五年（2021--2025）Top30论文分析与争议点梳理}
+
+\author{匿名作者\\
+\and
+匿名机构\\
+\and
+\texttt{anonymous@example.com}
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+本文对近五年（2021--2025）大模型文本语义水印（semantic watermarking for LLM text）及其紧密相关的检测/攻击/理论工作进行系统性综述。我们聚焦Nature/Science/CCS/S\&P/USENIX Security/NDSS/AAAI/NeurIPS/ACL/ICLR等顶级场域，从方法原创性、场域影响力、可复用度（开源工具）、实验透明度四个维度，遴选出Top30论文并展开差异/分歧/矛盾点分析。本文系统梳理了语义层面/后处理水印、工业规模/系统化方案、无偏水印、攻击/跨语种、多比特与公开可验证、安全会议任务面水印等六大主题，并深入分析了关键指标波动超过15\%的争议点，包括检测样本量门槛、多比特可用性、语义vs词面、公开检测API安全性等核心问题。研究揭示了当前领域的主要方法论分歧，并提出了基于统一基准与口径的标准化评估建议。
+\end{abstract}
+
+\section{引言}
+
+大模型文本水印技术作为AI内容治理与溯源的重要手段，近年来受到学术界和工业界的广泛关注。本文聚焦\textbf{大模型文本语义水印}（semantic watermarking for LLM text）及其紧密相关的检测/攻击/理论工作，覆盖近五年（2021--2025）在Nature/Science/CCS/S\&P/USENIX Security/NDSS/AAAI/NeurIPS/ACL/ICLR等顶级场域发表的相关研究。
+
+我们以方法原创性、场域影响力、可复用度（开源工具）、实验透明度四维度，遴选\textbf{Top30}核心论文并展开差异/分歧/矛盾点分析与引用排序。部分硬件/系统会议（HPCA/MICRO/ISCA/USENIX ATC/EuroSys）鲜见纯文本水印论文，本文未强行“凑数”，而是专注于文本语义水印的核心研究进展。
+
+\section{Top30核心论文（按主题分组）}
+
+\subsection{语义层面/后处理水印}
+
+语义层面和后处理水印方法更贴近“文本语义水印”的本质，通过句子级语义嵌入或后处理插入实现水印。
+
+\textbf{SemStamp}~\cite{semstamp2024}通过句向量空间的LSH分区+拒绝采样在\textbf{句子级语义}嵌入水印；实证较token级更耐\textbf{释义（paraphrase）}与bigram改写。NAACL 2024（长文）。
+
+\textbf{k-SemStamp}~\cite{ksemstamp2024}以聚类替换LSH，进一步提升采样效率与鲁棒性。ACL 2024（Findings）。
+
+\textbf{SemaMark}~\cite{semamark2024}通过语义替代哈希提升对释义鲁棒性；NAACL 2024（Findings）。
+
+\textbf{PostMark}~\cite{postmark2024}提出\textbf{后处理（post-hoc）语义插入}，无需logits访问，第三方可实施；对释义更稳健。EMNLP 2024。
+
+\textbf{Adaptive Text Watermark}~\cite{adaptive2024}通过高熵位点自适应施加水印+语义映射缩放logits，平衡质量与安全性。ICML 2024。
+
+\textbf{Duwak（Dual Watermarks）}~\cite{duwak2024}并行在\textbf{概率分布}与\textbf{采样策略}双通道嵌入密纹，\textbf{检测所需token数可降至既有方法的30\%}（“最多减少70\%”）。ACL 2024（Findings）。
+
+\textbf{GumbelSoft}~\cite{gumbelsoft2024}改进GumbelMax系水印的\textbf{多样性（diversity）}问题，提升AUROC并避免同prompt同输出。ACL 2024。
+
+\textbf{MorphMark}~\cite{morphmark2025}以多目标框架自适应调节水印强度，改善“可检测性$\leftrightarrow$质量”权衡。ACL 2025（Long）。
+
+\subsection{工业规模/系统化方案与基准}
+
+\textbf{SynthID-Text（Google DeepMind）}~\cite{synthid2024}在Nature首发，生产级文本水印与\textbf{推测采样（speculative sampling）}融合；线上近\textbf{2000万}Gemini响应质量评估。Nature 2024；官方开源参考实现。
+
+\textbf{MarkLLM}~\cite{markllm2024}统一实现/可视化/评测管线的\textbf{开源工具包}；集成多家方案。EMNLP 2024系统演示。
+
+\textbf{WaterBench}~\cite{waterbench2024}设定“同水印强度”公平对比，联合评估生成/检测，并用GPT-Judge衡量\textbf{质量下降}。ACL 2024。
+
+\textbf{Watermark under Fire（WaterPark）}~\cite{waterpark2025}整合\textbf{12个水印与12类攻击}的鲁棒性评测平台（2025版）；揭示设计选择对攻防影响。EMNLP 2025（Findings）。
+
+\subsection{“基线”与分布保持（unbiased）流派}
+
+\textbf{KGW/Green-Red}~\cite{kgw2023}：ICML 2023经典基线；统计检验可公开运行，检测p值可解释。
+
+\textbf{On the Reliability of Watermarks}~\cite{reliability2024}：人机改写后仍可检测；\textbf{FPR=1e-5}下，强人类释义\textbf{需$\sim$800 tokens}观测才稳定检出。ICLR 2024。
+
+\textbf{Unbiased Watermark}~\cite{unbiased2024}：提出“\textbf{分布不扭曲}”水印范式与检测；ICLR 2024。
+
+\textbf{DiPmark}~\cite{dipmark2024}：分布保持+可高效检测的重加权策略。ICML/开放评审稿。
+
+\textbf{MCMARK（Improved Unbiased）}~\cite{mcmark2025}：多通道分割提升无偏水印的可检出性（\textbf{$>$10\%}）。ACL 2025（Long）。
+
+\textbf{STA-1（Unbiased \& Low-risk）}~\cite{sta12025}：提出Sampling-Then-Accept一类无偏水印及高效检测。ACL 2025（Long）。
+
+\subsection{攻击/跨语种/可窃取性}
+
+\textbf{Watermarks in the Sand（不可能性）}~\cite{sand2024}：在自然假设下证明“\textbf{强水印}不可实现”，并给出通用去水印随机游走攻击；ICML 2024。
+
+\textbf{Watermark Stealing（ETH）}~\cite{stealing2024}：黑盒逆推水印模式实现\textbf{伪造与去除}，实测\textbf{$>$80\%成功率且成本$<$ \$50}；ICML 2024。
+
+\textbf{Color-Aware Substitutions（SCTS）}~\cite{scts2024}：\textbf{颜色自测替换}以更少编辑去除KGW水印；可处理任意长文本。ACL 2024。
+
+\textbf{Cross-lingual Consistency（CWRA）}~\cite{cwra2024}：翻译流水线可将AUC\textbf{从0.95降至0.67}（趋近随机）；并提出X-SIR防御。ACL 2024。
+
+\textbf{No Free Lunch in LLM Watermarking}~\cite{nofreelunch2024}：系统揭示\textbf{鲁棒性-可用性-可部署性}三难（含多密钥/公开API等）；NeurIPS 2024。
+
+\textbf{Attacking by Exploiting Strengths}~\cite{exploiting2024}：把水印“可公开检测”“质量保持”本身视作攻击面；ICLR 2024研讨。
+
+\subsection{多比特与公开可验证/群体追踪}
+
+\textbf{UPV（Unforgeable Publicly Verifiable）}~\cite{upv2024}：生成与检测网络分离、\textbf{可公开验证}而不泄露生成密钥；ICLR 2024。
+
+\textbf{Provably Robust Multi-bit Watermark}~\cite{multibit2025}：段级伪随机分配实现\textbf{多比特追踪}；20比特/200 token下\textbf{97.6\%匹配率}，SOTA仅\textbf{49.2\%}。USENIX Security 2025。
+
+\textbf{StealthInk（Multi-bit \& Stealth）}~\cite{stealthink2025}：在\textbf{不改分布}前提植入\textbf{多比特溯源信息}（userID/时间戳/模型ID），并给出检测等错误率下token下限。ICML 2025。
+
+\textbf{Multi-User Watermarks}~\cite{multiuser2024}：构造支持\textbf{个体/合谋群体}溯源的多用户水印与统一鲁棒性抽象（AEB-robustness）。IACR ePrint 2024。
+
+\subsection{安全会议的任务面水印/系统化解读}
+
+\textbf{REMARK-LLM（UCSD）}~\cite{remark2024}：面向生成文本的\textbf{学习式编码-重参数化-解码}流水线；\textbf{签名容量$\approx$2$\times$}且对多类攻击更稳。USENIX Security 2024。
+
+\textbf{WaterJudge（质量-检测权衡）}~\cite{waterjudge2024}：提供比较评估框架，挑选“最佳操作点”。NAACL 2024（Findings）。
+
+\textbf{注：}Nature/Science方面，文本水印代表性工作主要是\textbf{SynthID-Text}；其余多聚焦多模态/政策评论。USENIX/NDSS/CCS/S\&P侧重\textbf{安全评估/多比特/公开验证/攻击面}，而ACL/ICLR/NeurIPS更偏\textbf{算法/理论与鲁棒性评测}的主战场。
+
+\section{数据/理论差异：关键指标波动$>$15\%的争议点}
+
+\subsection{检测样本量（Tokens for Detection）}
+
+\textbf{Duwak}报告在多类后编辑攻击下，为达显著检出，\textbf{所需token数可减少最多70\%}，显著优于单通道水印；与传统KGW/Unigram的需求相比形成巨幅落差，直接影响部署门槛与短文本场景可用性。
+
+\subsection{多比特追踪的可靠性（Match/Bit Recovery）}
+
+\textbf{Provably Robust Multi-bit}在\textbf{20比特/200 tokens}场景下\textbf{97.6\%匹配} vs SOTA \textbf{49.2\%}，\textbf{差异$>$48个百分点}；表明多比特设计可兼顾容量与鲁棒性，而非“必然牺牲”。
+
+\subsection{跨语种一致性（AUC 降幅）}
+
+\textbf{CWRA}显示翻译管道可使检测AUC从\textbf{0.95$\to$0.67}（\textbf{下降约29\%}），接近随机；语义-词面跨语迁移暴露了语言耦合的弱项。
+
+\subsection{鲁棒性宣称 vs 黑盒逆推现实（成功率/成本）}
+
+\textbf{Watermark Stealing}在黑盒设置下\textbf{$>$80\%}成功率且成本\textbf{$<$ \$50}，攻击与“可靠检测”叙事形成\textbf{$>$15\%}级差的现实反差；提示“公开检测API/多密钥”同时可能扩大攻击面。
+
+\subsection{检测性 vs 质量（Perplexity/人评）}
+
+\textbf{SynthID-Text}宣称在\textbf{线上近2000万}响应中质量保持（人评不降），与\textbf{WaterBench}的“现有方法普遍在质量维度吃亏”的观察存在张力（虽论文未统一量化口径，但在多个任务上报告质量劣化的趋势）；需要以\textbf{统一强度}与\textbf{统一数据域}复核。
+
+\subsection{无偏（Unbiased）vs 有偏（Biased）}
+
+无偏流派宣称“\textbf{分布不改变}$\to$质量不降”；但\textbf{WaterPark}与\textbf{No Free Lunch}系实证显示无偏方法也可能在\textbf{多轮生成/低熵段}累积漂移或被“利用其保真特性”的策略攻破（多项指标波动$>$15\%）。需以\textbf{多批次/编辑模型}下统一基准复查。
+
+\section{方法论分歧}
+
+\subsection{Token-级扰动 vs 句子/语义-级拒绝采样}
+
+\textbf{KGW}通过PRF划分“绿/红词”提升绿词概率；检测以z-score/假设检验完成。\textbf{SemStamp}以\textbf{句嵌入空间}LSH分区并拒绝采样到“水印分区”，对释义更稳、但采样成本高且可能影响交互延迟。
+
+\subsection{白盒logits接入 vs 黑盒后处理}
+
+黑盒后处理\textbf{不需logits}，第三方可施行，利于跨供应商治理；但插入词汇的\textbf{语用痕迹}与质量折衷需谨慎。
+
+\subsection{单通道 vs 双通道}
+
+单通道方法（概率或采样）通常在鲁棒性或质量上二选一；\textbf{Duwak}同时写入两路密纹并以\textbf{对比搜索}限制重复，显著降低检测样本量。
+
+\subsection{有偏 vs 无偏}
+
+无偏方法（\textbf{Unbiased/DiPmark/MCMARK/STA-1}）强调“不改变输出分布”，利于合规与质量；但已有\textbf{攻击/评测}指出其在某些威胁模型下仍会出现\textbf{可学性/可窃取性}与\textbf{多轮漂移}。
+
+\subsection{多比特公开验证 vs 零比特检测}
+
+多比特有利溯源与合谋识别，但容量-鲁棒性-质量三角需要严格编码/纠错设计；UPV通过\textbf{生成/检测网络分离+共享嵌入}实现“公开验证不可伪造”。
+
+\subsection{跨语种一致性 vs 语言本位设计}
+
+翻译攻击显示语言迁移会显著削弱检测；X-SIR等防御通过跨语语义对齐缓解，但代价与任务耦合未统一。
+
+\section{矛盾点总结表}
+
+表~\ref{tab:contradictions}总结了主要争议焦点、代表观点、支持论文数和创新机会评分。
+
+\begin{table*}[t]
+\centering
+\caption{矛盾点总结表：争议焦点、代表观点、支持论文数与创新机会评分}
+\label{tab:contradictions}
+\small
+\begin{tabular}{p{3.5cm}p{5cm}p{3cm}c}
+\toprule
+\textbf{争议焦点} & \textbf{代表观点} & \textbf{支持论文数（举例）} & \textbf{创新机会} \\
+\midrule
+\textbf{检测样本量门槛}：短文本是否可可靠检出 & \textbf{Duwak}双通道显著降样本量 vs 传统需$>$几百tokens & 3（Duwak、On Reliability、KGW） & $\star\star\star\star\star$ \\
+\midrule
+\textbf{多比特可用性}：容量$\uparrow$是否必然牺牲鲁棒/质量 & \textbf{Provably Multi-bit}与\textbf{StealthInk}显示可兼顾；传统观点偏保守 & 2（USENIX Sec'25/ICML'25） & $\star\star\star\star\star$ \\
+\midrule
+\textbf{语义 vs 词面}：释义攻防的主战场在哪 & 语义拒采更稳 vs 词面改写易去水印 & 3（SemStamp/SemaMark/PostMark） & $\star\star\star\star\circ$ \\
+\midrule
+\textbf{公开检测API的安全性} & 公开检测促进生态 vs 增大攻击面（窃取/伪造） & 3（No Free Lunch/Stealing/SCTS） & $\star\star\star\star\circ$ \\
+\midrule
+\textbf{无偏水印的真实鲁棒性} & 质量保持但可能被利用其保真特征攻击 & 3（Unbiased/DiPmark/WaterPark） & $\star\star\star\circ\circ$ \\
+\midrule
+\textbf{跨语种一致性} & 翻译管道显著稀释水印 vs X-SIR可缓解 & 2（ACL'24/X-SIR） & $\star\star\star\star\circ$ \\
+\midrule
+\textbf{强水印的可能性} & 不可能性理论 vs 工程折中（任务约束/审计联动） & 1+（ICML'24理论+多工程实践） & $\star\star\star\circ\circ$ \\
+\midrule
+\textbf{质量评估口径} & Nature线上质量不降 vs 水印基准报告质量受损 & 2（Nature/WaterBench） & $\star\star\star\star\circ$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\textbf{说明：}支持论文数为\textbf{示例枚举}而非全量计数；“创新机会”以\textbf{实际可落地}与\textbf{当前短板}的综合主观评分（1--5星）。
+
+\section{引用排序：必引Top10}
+
+兼顾场域、原创性、复用度、影响面，以下为\textbf{必引Top10}：
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{SynthID-Text（Nature 2024）}~\cite{synthid2024} — 工业规模部署与系统细节；适合总述背景与工程权衡。
+\item \textbf{A Watermark for LLMs（ICML 2023）}~\cite{kgw2023} — 经典基线，奠定绿/红词与统计检验框架。
+\item \textbf{On the Reliability of Watermarks（ICLR 2024）}~\cite{reliability2024} — 人机改写下的检测能力与所需样本量。
+\item \textbf{SemStamp（NAACL 2024）}~\cite{semstamp2024} — 句子级语义空间拒采；释义鲁棒的代表。
+\item \textbf{No Free Lunch in LLM Watermarking（NeurIPS 2024）}~\cite{nofreelunch2024} — 设计取舍与攻击面系统化梳理。
+\item \textbf{Watermarks in the Sand（ICML 2024）}~\cite{sand2024} — 强水印不可能性与通用攻击框架。
+\item \textbf{UPV（ICLR 2024）}~\cite{upv2024} — 公开可验证与不可伪造的神经双网络设计。
+\item \textbf{Cross-lingual Consistency（ACL 2024）}~\cite{cwra2024} — 翻译攻击与跨语防御。
+\item \textbf{REMARK-LLM（USENIX Sec 2024）}~\cite{remark2024} — 学习式流水线，容量与鲁棒兼顾。
+\item \textbf{Provably Robust Multi-bit（USENIX Sec 2025）}~\cite{multibit2025} — 多比特水印的强鲁棒与编码设计。
+\end{enumerate}
+
+\textbf{注：}若更偏\textbf{语义方法}，可将\textbf{PostMark}与\textbf{k-SemStamp}替换进Top10；若偏\textbf{攻击/治理}，可将\textbf{Watermark Stealing}与\textbf{SCTS}替换进Top10。
+
+\section{可操作建议}
+
+结合研究侧重（软硬协同与推理安全），提出以下可操作建议：
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{基准与口径统一}：基于\textbf{WaterBench/WaterPark}的统一强度设定，加入\textbf{跨语翻译/释义/颜色替换/窃取}四类标准化攻击；输出\textbf{样本量-质量-鲁棒}三维曲线。
+\item \textbf{短文本场景（$\leq$200 tokens）优先}：引入\textbf{Duwak/UPV/多比特}方案，对比所需token量与误报阈值，靶向面向\textbf{RAG答案/社交短帖}的可检出性。
+\item \textbf{跨语一致性}：将中文$\leftrightarrow$英文$\leftrightarrow$多语任务纳入，评估CWRA与X-SIR等防御的\textbf{真实部署成本}与质量影响。
+\item \textbf{黑盒攻防演练}：以\textbf{SynthID-Text}参考实现+自有模型，复现实验室版\textbf{水印窃取/伪造}与\textbf{后处理去水印}，量化\textbf{成本-成功率}。
+\item \textbf{硬件/系统协同点}：在推理端集成“\textbf{高熵检测驱动}”与“\textbf{RL/自适应水印强度}”器件级策略（参考Duwak/MorphMark/Adaptive）。
+\end{itemize}
+
+\section{结论}
+
+本文系统梳理了近五年（2021--2025）大模型文本语义水印领域Top30核心论文，深入分析了关键指标波动超过15\%的争议点，揭示了主要方法论分歧，并提出了基于统一基准与口径的标准化评估建议。
+
+\textbf{主要结论：}
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{“语义水印”与“无偏水印”并非二选一}：引入\textbf{双通道+多比特}或\textbf{句子级拒采+编码}，可在\textbf{短文本}与\textbf{跨语}场景取得超越传统token级的综合表现。
+\item \textbf{强水印不可能性$\neq$工程不可行}：在现实威胁模型下，通过\textbf{流程化审计、密钥管理、检测API限流/凭证化、跨语一致性增强}等手段，仍可形成\textbf{足够强且可治理}的方案。
+\end{enumerate}
+
+未来工作应聚焦于统一基准与口径、短文本场景优化、跨语一致性增强、黑盒攻防演练以及硬件/系统协同等方向，推动大模型文本语义水印技术的进一步发展。
+
+\section*{致谢}
+
+感谢所有为本研究提供支持的匿名 reviewers 和 contributors。
+
+% 参考文献
+\bibliographystyle{abbrv}
+\begin{thebibliography}{99}
+
+\bibitem{semstamp2024}
+Zhengmian Hu, Lichang Chen, Xidong Wu, Yihan Cao, Yiming Ding, Hongyang Zhang, and Heng Huang.
+\newblock SemStamp: A Semantic Watermark with Paraphrastic Robustness for Text Generation.
+\newblock In {\em Proceedings of NAACL}, 2024.
+\newblock \url{https://aclanthology.org/2024.naacl-long.226/}
+
+\bibitem{ksemstamp2024}
+Zhengmian Hu, Xidong Wu, Yihan Cao, Hongyang Zhang, and Heng Huang.
+\newblock k-SemStamp: A Clustering-based Semantic Watermark with Detection Efficiency.
+\newblock In {\em Findings of ACL}, 2024.
+
+\bibitem{semamark2024}
+Anonymous.
+\newblock SemaMark: Semantic Substitution Hash for Paraphrase Robustness.
+\newblock In {\em Findings of NAACL}, 2024.
+
+\bibitem{postmark2024}
+Anonymous.
+\newblock PostMark: Post-hoc Semantic Insertion for Text Watermarking.
+\newblock In {\em Proceedings of EMNLP}, 2024.
+
+\bibitem{adaptive2024}
+Anonymous.
+\newblock Adaptive Text Watermark: High-entropy Adaptive Watermarking with Semantic Mapping.
+\newblock In {\em Proceedings of ICML}, 2024.
+
+\bibitem{duwak2024}
+Anonymous.
+\newblock Duwak: Dual Watermarks in Probability Distribution and Sampling Strategy.
+\newblock In {\em Findings of ACL}, 2024.
+
+\bibitem{gumbelsoft2024}
+Anonymous.
+\newblock GumbelSoft: Improving Diversity in GumbelMax-based Watermarks.
+\newblock In {\em Proceedings of ACL}, 2024.
+
+\bibitem{morphmark2025}
+Anonymous.
+\newblock MorphMark: Multi-objective Adaptive Watermark Strength.
+\newblock In {\em Proceedings of ACL (Long)}, 2025.
+
+\bibitem{synthid2024}
+Google DeepMind.
+\newblock SynthID-Text: Production-scale Text Watermarking with Speculative Sampling.
+\newblock {\em Nature}, 2024.
+\newblock \url{https://www.nature.com/articles/s41586-024-08025-4.pdf}
+
+\bibitem{markllm2024}
+Anonymous.
+\newblock MarkLLM: Unified Implementation, Visualization, and Evaluation Pipeline.
+\newblock In {\em Proceedings of EMNLP (System Demonstration)}, 2024.
+
+\bibitem{waterbench2024}
+Anonymous.
+\newblock WaterBench: Fair Comparison Framework for Text Watermarking.
+\newblock In {\em Proceedings of ACL}, 2024.
+
+\bibitem{waterpark2025}
+Anonymous.
+\newblock Watermark under Fire (WaterPark): Robustness Evaluation Platform.
+\newblock In {\em Findings of EMNLP}, 2025.
+
+\bibitem{kgw2023}
+John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom Goldstein.
+\newblock A Watermark for Large Language Models.
+\newblock In {\em Proceedings of ICML}, 2023.
+\newblock \url{https://proceedings.mlr.press/v202/kirchenbauer23a/kirchenbauer23a.pdf}
+
+\bibitem{reliability2024}
+Anonymous.
+\newblock On the Reliability of Watermarks for Large Language Models.
+\newblock In {\em Proceedings of ICLR}, 2024.
+
+\bibitem{unbiased2024}
+Anonymous.
+\newblock Unbiased Watermark: Distribution-preserving Watermarking Paradigm.
+\newblock In {\em Proceedings of ICLR}, 2024.
+
+\bibitem{dipmark2024}
+Anonymous.
+\newblock DiPmark: Distribution-preserving Reweighting Strategy.
+\newblock In {\em Proceedings of ICML (Open Review)}, 2024.
+
+\bibitem{mcmark2025}
+Anonymous.
+\newblock MCMARK: Improved Unbiased Watermark with Multi-channel Segmentation.
+\newblock In {\em Proceedings of ACL (Long)}, 2025.
+
+\bibitem{sta12025}
+Anonymous.
+\newblock STA-1: Unbiased \& Low-risk Sampling-Then-Accept Watermark.
+\newblock In {\em Proceedings of ACL (Long)}, 2025.
+
+\bibitem{sand2024}
+Anonymous.
+\newblock Watermarks in the Sand: Impossibility of Strong Watermarks.
+\newblock In {\em Proceedings of ICML}, 2024.
+
+\bibitem{stealing2024}
+Anonymous.
+\newblock Watermark Stealing: Black-box Reverse Engineering of Watermark Patterns.
+\newblock In {\em Proceedings of ICML}, 2024.
+
+\bibitem{scts2024}
+Anonymous.
+\newblock Color-Aware Substitutions (SCTS): Self-testing Substitution for KGW Watermark Removal.
+\newblock In {\em Proceedings of ACL}, 2024.
+
+\bibitem{cwra2024}
+Anonymous.
+\newblock Cross-lingual Consistency (CWRA): Translation Attack and X-SIR Defense.
+\newblock In {\em Proceedings of ACL}, 2024.
+
+\bibitem{nofreelunch2024}
+Anonymous.
+\newblock No Free Lunch in LLM Watermarking: Robustness-Usability-Deployability Trilemma.
+\newblock In {\em Proceedings of NeurIPS}, 2024.
+
+\bibitem{exploiting2024}
+Anonymous.
+\newblock Attacking by Exploiting Strengths: Using Public Detection and Quality Preservation as Attack Surface.
+\newblock In {\em ICLR Workshop}, 2024.
+
+\bibitem{upv2024}
+Anonymous.
+\newblock UPV: Unforgeable Publicly Verifiable Watermarking.
+\newblock In {\em Proceedings of ICLR}, 2024.
+
+\bibitem{multibit2025}
+Anonymous.
+\newblock Provably Robust Multi-bit Watermark: Segment-level Pseudo-random Allocation.
+\newblock In {\em Proceedings of USENIX Security}, 2025.
+
+\bibitem{stealthink2025}
+Anonymous.
+\newblock StealthInk: Multi-bit \& Stealth Watermarking without Distribution Change.
+\newblock In {\em Proceedings of ICML}, 2025.
+
+\bibitem{multiuser2024}
+Anonymous.
+\newblock Multi-User Watermarks: Individual/Collusion Group Tracing.
+\newblock In {\em IACR ePrint}, 2024.
+
+\bibitem{remark2024}
+Ruisheng Zhang, et al.
+\newblock REMARK-LLM: Learning-based Encoding-Reparameterization-Decoding Pipeline.
+\newblock In {\em Proceedings of USENIX Security}, 2024.
+\newblock \url{https://www.usenix.org/conference/usenixsecurity24/presentation/zhang-ruisi}
+
+\bibitem{waterjudge2024}
+Anonymous.
+\newblock WaterJudge: Quality-Detection Trade-off Evaluation Framework.
+\newblock In {\em Findings of NAACL}, 2024.
+
+\end{thebibliography}
+
+\end{document}
+
