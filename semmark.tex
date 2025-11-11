@@ -53,7 +53,7 @@ Semantic Watermarking with Theoretical Bounds and Attack-Defense Dynamics}
 \maketitle
 
 \begin{abstract}
-大模型文本语义水印面临一个根本困境：在语义保持的约束下嵌入不可感知的标记。与图像水印不同，文本的离散性质和高精度要求使得这个问题涉及多个深层次的理论下界。2021--2025年的研究演变反映了从"可行性验证"(2021--22) $\to$ "鲁棒性突破"(2023) $\to$ "工业规模"(2024) $\to$ "理论极限"(2025)的自然进程。每个阶段的技术创新都由前一阶段的攻击暴露的弱点所驱动，形成攻防螺旋上升的动态过程。本综述的核心贡献不仅在于系统化分类，更在于\textbf{量化揭示}：(1) 语义级方法显著优于token级(+15--20\% AUC)——但这来自理论下界的必然性而非算法创新；(2) 多比特水印可同时实现容量与鲁棒性(97.6\%匹配率)——突破了传统"三难"认知；(3) 跨语种攻击暴露的深层问题——并非语言特定的，而是"语义-表面"的根本分离。这些看似分散的发现背后有统一的理论源头：多个形式化下界(信息论、计算复杂性、不可能性定理)在约束着可行的设计空间。我们的分析揭示，当前"争议"多数是这些下界的\textbf{不同侧面表现}，而非设计不当。基于这个理论统一框架，我们提出了场景化的方法选型指南：实时对话用KGW(低开销)、长文本用SemStamp(高鲁棒)、精确溯源用多比特(高容量)。尽管技术成熟，但九个关键开放问题仍待解决，从统一多模态水印、可审计性的ZKP集成，到硬件-算法协同优化。这些将是未来五年的研究前沿。
+大模型文本语义水印面临一个根本困境：在语义保持的约束下嵌入不可感知的标记。与图像水印不同，文本的离散性质和高精度要求使得这个问题涉及多个深层次的理论下界。2021--2025年的研究演变反映了从"可行性验证"(2021--22) $\to$ "鲁棒性突破"(2023) $\to$ "工业规模"(2024) $\to$ "理论极限"(2025)的自然进程。每个阶段的技术创新都由前一阶段的攻击暴露的弱点所驱动，形成攻防螺旋上升的动态过程。本综述的核心贡献不仅在于系统化分类，更在于\textbf{量化揭示}：(1) 语义级方法显著优于token级(+15--20\% AUC)——但这来自理论下界的必然性而非算法创新；(2) 多比特水印可同时实现容量与鲁棒性(97.6\%匹配率)——突破了传统"三难"认知；(3) 跨语种攻击暴露的深层问题——并非语言特定的，而是"语义-表面"的根本分离。这些看似分散的发现背后有统一的理论源头：多个形式化下界(信息论、计算复杂性、不可能性定理)在约束着可行的设计空间。我们的分析揭示，当前"争议"多数是这些下界的\textbf{不同侧面表现}，而非设计不当。基于这个理论统一框架，我们揭示了水印系统的设计空间受多个形式化下界约束的本质特征，为理解现有方法的局限和未来研究方向提供了理论基础。
 \end{abstract}
 
 \section{引言}
@@ -99,13 +99,12 @@ Semantic Watermarking with Theoretical Bounds and Attack-Defense Dynamics}
 \item \textbf{理论深度突破}：建立水印安全形式化框架，推导信息论下界和不可能性定理的定量演绎，揭示争议点的理论根源。
 \item \textbf{定量分析方法的革新}：从描述性统计转向因果推断框架，采用meta-analysis、效应量计算、贝叶斯层级模型等方法，提供更严谨的统计推断。
 \item \textbf{争议点因果解析}：用反事实框架重构争议点分析，构建争议点因果DAG，揭示争议点之间的内在逻辑关联。
-\item \textbf{生产级部署架构}：提出三种参考架构（实时对话/长文本/多比特），提供快速选型流程图和成本-收益分析。
-\item \textbf{十大系统化开放问题}：提出形式化的开放问题，包含难度评估、资源需求和预期影响，提供研究路线图。
+\item \textbf{理论深度突破}：建立水印安全形式化框架，推导信息论下界和不可能性定理的定量演绎。
 \end{enumerate}
 
 \subsection{论文结构}
 
-本文结构如下：第2节介绍方法论和论文筛选标准；第3节提出分类框架与术语统一；第4节进行文献对标与本综述定位；第5节建立定量分析框架与基准；第6节构建水印安全形式化框架；第7节系统分析核心方法并提供性能对比（采用分层图表系统）；第8节分析攻击-防御动态演进（包括攻击分类学和攻防成本-效益分析）；第9节深入分析关键争议点（构建争议点因果DAG）；第10节提供生产级部署架构与场景化指南；第11节提出十大开放问题与未来研究方向；第12节总结全文并反思。论文逻辑流：方法论 → 框架(建立共同语言) → 文献对标(现在清楚了) → 定量工具(为分析准备) → 理论基础(解释为什么) → 方法详解(在这个框架内理解) → 动态分析(系统级理解) → 争议点(现在能理解根本原因) → 部署(实践指导) → 开放问题(研究路线图) → 结论(meta-level反思)。
+本文结构如下：第2节介绍方法论和论文筛选标准；第3节提出分类框架与术语统一；第4节进行文献对标与本综述定位；第5节建立定量分析框架与基准；第6节构建水印安全形式化框架；第7节系统分析核心方法并提供性能对比（采用分层图表系统）；第8节分析攻击-防御动态演进（包括攻击分类学和攻防成本-效益分析）；第9节深入分析关键争议点（构建争议点因果DAG）；第10节总结全文并反思。论文逻辑流：方法论 → 框架(建立共同语言) → 文献对标(现在清楚了) → 定量工具(为分析准备) → 理论基础(解释为什么) → 方法详解(在这个框架内理解) → 动态分析(系统级理解) → 争议点(现在能理解根本原因) → 结论(meta-level反思)。
 
 \section{方法论}
 
@@ -390,7 +389,6 @@ $$k_{\max} \approx \frac{\log_2(V)}{1 + H(p)/\delta}$$
 \item \textbf{争议点深度分析}：用反事实框架重构争议点分析，构建争议点因果DAG，揭示争议点之间的内在逻辑关联。
 \item \textbf{攻防动态分析}：系统梳理攻击-防御的演进关系，揭示攻防博弈规律，展示四阶段演进过程。
 \item \textbf{理论深度突破}：建立水印安全形式化框架，推导信息论下界和不可能性定理的定量演绎。
-\item \textbf{生产级部署架构}：提出三种参考架构，提供快速选型流程图和成本-收益分析。
 \item \textbf{标准化评估框架}：提出可复现的评估框架，为未来研究提供基准。
 \end{enumerate}
 
@@ -1482,553 +1480,6 @@ UPV通过分离生成和检测网络实现不可伪造的公开验证：
 
 \textbf{说明}：支持论文数为\textbf{示例枚举}而非全量计数；“创新机会”评分基于以下标准：（1）\textbf{技术瓶颈}：当前技术瓶颈的严重程度（如短文本检测是核心瓶颈）；（2）\textbf{工业需求}：工业界对解决方案的迫切程度（如跨语种一致性是国际化应用的关键需求）；（3）\textbf{研究空白}：当前研究的空白程度（如多比特水印的理论分析不足）；（4）\textbf{可行路径}：是否有明确的可行性路径（如硬件协同优化已有初步探索）。评分范围1--5星，$\star\star\star\star\star$表示最高优先级。
 
-\section{生产级部署架构与场景化指南}
-
-\subsection{本章在整体框架中的位置}
-
-本章从科研转向工程实践，提出三种参考架构（实时对话/长文本/多比特），提供快速选型流程图和成本-收益分析，为工程师提供直接可用的部署指导。
-
-\subsection{三种参考架构}
-
-\subsubsection{架构I: 对话系统（实时性优先）}
-
-\textbf{应用场景}：实时对话、客服机器人、在线聊天助手
-
-\textbf{系统架构流程}：
-\begin{enumerate}[leftmargin=*]
-\item \textbf{生成阶段}：
-\begin{itemize}[leftmargin=*]
-\item LLM输出token序列 → [token-level快速路径] → KGW水印嵌入 (1.1× 开销)
-\item 水印嵌入延迟: $<$50ms（单句，$\sim$50 tokens）
-\item 流媒体输出：每个token生成后立即发送（streaming response）
-\item 用户感知延迟: $<$100ms total（包含网络传输）
-\end{itemize}
-
-\item \textbf{检测阶段}：
-\begin{itemize}[leftmargin=*]
-\item 后台异步检测（黑盒API，无需logits访问）
-\item 可疑内容采样检测策略：
-\begin{itemize}[leftmargin=*]
-\item 触发条件：敏感关键词、异常行为模式、用户举报
-\item 检测阈值：FPR=1e-5，对应AUC$\geq$0.85
-\item 检测窗口：滑动窗口（200--800 tokens），动态调整
-\end{itemize}
-\item 成本控制: \$0.001/万条检测（基于云服务定价）
-\item 可部署到移动端：检测算法复杂度O(n)，内存占用$<$10MB
-\end{itemize}
-
-\item \textbf{密钥管理}：
-\begin{itemize}[leftmargin=*]
-\item 密钥轮换：每24小时自动轮换，支持多密钥并发
-\item 密钥存储：硬件安全模块（HSM）或云密钥管理服务（KMS）
-\item 密钥分发：通过安全通道分发到检测端点
-\end{itemize}
-\end{enumerate}
-
-\textbf{性能指标}：
-\begin{itemize}[leftmargin=*]
-\item 吞吐量：$\geq$1000 requests/秒（单机）
-\item 延迟：P99延迟$<$100ms
-\item 检测准确率：AUC$\geq$0.85（FPR=1e-5）
-\item 资源消耗：CPU使用率$<$5\%，内存占用$<$100MB
-\end{itemize}
-
-\textbf{故障处理}：
-\begin{itemize}[leftmargin=*]
-\item 水印嵌入失败：降级到无水印模式，记录日志并告警
-\item 检测服务异常：自动切换到备用检测端点，保证服务可用性
-\item 密钥泄露：立即轮换密钥，追溯泄露时间窗口内的所有内容
-\end{itemize}
-
-\subsubsection{架构II: 文档生成系统（质量优先）}
-
-\textbf{应用场景}：文档摘要、新闻生成、长文本创作、报告撰写
-
-\textbf{系统架构流程}：
-\begin{enumerate}[leftmargin=*]
-\item \textbf{生成阶段}：
-\begin{itemize}[leftmargin=*]
-\item 长文本生成 ($>$1000 tokens) → [semantic-level严格模式] → SemStamp水印嵌入 (1.8× 开销)
-\item 跨语种防御：集成X-SIR，支持多语言水印（英、中、日、韩等）
-\item 水印嵌入延迟: $\sim$200--500ms（取决于文本长度，可接受）
-\item 批量处理：支持批量生成（batch size=10--50），提高吞吐量
-\end{itemize}
-
-\item \textbf{质量评估阶段}：
-\begin{itemize}[leftmargin=*]
-\item 离线质量评估（可容忍延迟，$<$5秒）
-\item GPT-Judge审核：自动评估生成文本的质量（流畅度、相关性、一致性）
-\item 质量指标：Perplexity变化$<$5\%，人工评估分数$\geq$4.0/5.0
-\item 质量不达标处理：自动重生成或人工审核
-\end{itemize}
-
-\item \textbf{检测阶段}：
-\begin{itemize}[leftmargin=*]
-\item 周期性完整检测（白盒，需要logits访问）
-\item 检测策略：
-\begin{itemize}[leftmargin=*]
-\item 定期完整检测：每批次生成后立即检测（FPR=1e-7，高精度要求）
-\item 多语言检测：支持跨语种检测，AUC≥0.87（单语种AUC≥0.95）
-\item 检测窗口：完整文本检测，无需滑动窗口
-\end{itemize}
-\item 集成到内容审核流程：
-\begin{itemize}[leftmargin=*]
-\item 与现有内容审核系统（如AWS Content Moderation、Google Cloud Natural Language API）集成
-\item 检测结果自动上报到审核系统，触发后续处理流程
-\item 支持人工复审：检测结果不确定时，自动触发人工审核
-\end{itemize}
-\end{itemize}
-
-\item \textbf{多语言支持}：
-\begin{itemize}[leftmargin=*]
-\item 语言检测：自动识别输入/输出语言
-\item 跨语种语义对齐：使用X-SIR进行跨语种语义对齐，保证跨语种检测准确性
-\item 语言特定优化：针对不同语言调整水印强度参数（$\delta$）
-\end{itemize}
-\end{enumerate}
-
-\textbf{性能指标}：
-\begin{itemize}[leftmargin=*]
-\item 吞吐量：$\geq$100 requests/分钟（单机，批量处理）
-\item 延迟：P99延迟$<$5秒（包含质量评估）
-\item 检测准确率：单语种AUC≥0.95，跨语种AUC≥0.87
-\item 质量保持：Perplexity变化$<$5\%，人工评估分数$\geq$4.0/5.0
-\item 资源消耗：CPU使用率$<$30\%，内存占用$<$2GB（包含语义向量计算）
-\end{itemize}
-
-\textbf{部署注意事项}：
-\begin{itemize}[leftmargin=*]
-\item 语义向量计算：需要GPU加速（推荐NVIDIA A100/V100），CPU计算会显著增加延迟
-\item 多语言模型：需要部署多语言语义模型（如multilingual BERT、XLM-R），增加存储和计算成本
-\item 质量评估服务：需要独立的GPT-Judge服务，增加系统复杂度
-\item 检测服务高可用：需要多副本部署，保证检测服务的高可用性
-\end{itemize}
-
-\subsubsection{架构III: 代码/需求溯源（多比特优先）}
-
-\textbf{应用场景}：代码生成、API调用追踪、需求文档溯源
-
-\textbf{系统架构流程}：
-\begin{enumerate}[leftmargin=*]
-\item \textbf{生成阶段}：
-\begin{itemize}[leftmargin=*]
-\item 代码生成 (500--2000 tokens) → [multi-bit segment-level] → Provably Robust Multi-bit水印嵌入 (2.5× 开销)
-\item 用户信息编码：
-\begin{itemize}[leftmargin=*]
-\item 用户ID编码：20比特，可支持$2^{20}=1,048,576$个用户
-\item 时间戳编码：32比特，精确到秒级
-\item 模型版本编码：8比特，支持256个模型版本
-\item 总容量：60比特，分段嵌入到200 tokens中
-\end{itemize}
-\item 水印嵌入延迟: $\sim$500--1000ms（取决于代码长度和复杂度）
-\item 分段策略：每200 tokens嵌入20比特，支持长代码的分段嵌入
-\end{itemize}
-
-\item \textbf{检测阶段}：
-\begin{itemize}[leftmargin=*]
-\item 精确溯源（神经网络检测，需要训练好的检测模型）
-\item 检测流程：
-\begin{itemize}[leftmargin=*]
-\item 输入：待检测代码文本
-\item 分段检测：将代码分段（每段200 tokens），分别检测每段的水印
-\item 信息提取：从检测到的水印中提取用户ID、时间戳、模型版本等信息
-\item 匹配率计算：统计匹配的段数，计算总体匹配率（目标：$\geq$97.6\%）
-\end{itemize}
-\item UPV公开验证：
-\begin{itemize}[leftmargin=*]
-\item 公开检测算法：检测算法可以公开，无需密钥管理
-\item 不可伪造性：基于定义2（不可伪造性），即使检测算法公开，攻击者也无法伪造有效水印
-\item 安全等级：VERY HIGH（不可伪造性，满足高安全要求）
-\end{itemize}
-\item 合谋检测：
-\begin{itemize}[leftmargin=*]
-\item 支持多用户合谋检测：通过分析多个代码片段的水印模式，识别合谋用户群体
-\item 合谋检测算法：基于多用户水印的统一鲁棒性抽象（AEB-robustness）
-\item 检测准确率：合谋检测准确率$\geq$90\%
-\end{itemize}
-\end{itemize}
-
-\item \textbf{溯源报告生成}：
-\begin{itemize}[leftmargin=*]
-\item 溯源报告生成：自动生成包含用户ID、时间戳、模型版本等信息的溯源报告
-\item 报告格式：支持PDF、JSON等格式，便于技术分析和验证
-\item 时间戳验证：支持时间戳的可信验证（基于区块链或可信时间戳服务）
-\item 不可否认性：基于UPV的不可伪造性，保证溯源结果的不可否认性
-\end{itemize}
-\end{enumerate}
-
-\textbf{性能指标}：
-\begin{itemize}[leftmargin=*]
-\item 吞吐量：$\geq$50 requests/分钟（单机，包含神经网络检测）
-\item 延迟：P99延迟$<$10秒（包含水印嵌入和检测）
-\item 匹配率：$\geq$97.6\%（20比特/200 tokens，无攻击场景）
-\item 鲁棒性：在释义攻击下匹配率$\geq$85\%，在翻译攻击下匹配率$\geq$65\%
-\item 资源消耗：CPU使用率$<$50\%，内存占用$<$4GB（包含神经网络模型）
-\item GPU需求：推荐NVIDIA A100/V100，用于神经网络检测加速
-\end{itemize}
-
-\textbf{安全考虑}：
-\begin{itemize}[leftmargin=*]
-\item 密钥管理：多比特水印需要更严格的密钥管理，推荐使用HSM或KMS
-\item 检测服务安全：检测服务需要部署在安全环境中，防止攻击者逆向工程
-\item 用户隐私保护：用户ID编码需要考虑隐私保护，支持匿名化或加密编码
-\item 数据安全：需要采用加密存储和传输，保护用户数据安全
-\end{itemize}
-
-\textbf{部署架构}：
-\begin{itemize}[leftmargin=*]
-\item 生成服务：部署在用户侧或云端，负责水印嵌入
-\item 检测服务：部署在独立的安全环境中，负责水印检测和溯源
-\item 密钥管理服务：部署在HSM或KMS中，负责密钥的生成、存储和分发
-\item 溯源服务：部署在安全环境中，负责生成和存储溯源报告
-\end{itemize}
-
-\subsection{快速选型流程图与决策树}
-
-\textbf{决策流程}：
-
-\textbf{步骤1：确定任务类型}
-\begin{itemize}[leftmargin=*]
-\item 实时对话/聊天 → 架构I（实时性优先）
-\item 长文本生成/文档摘要 → 架构II（质量优先）
-\item 代码生成/溯源 → 架构III（多比特优先）
-\item 混合场景 → 组合架构（如实时对话+代码生成）
-\end{itemize}
-
-\textbf{步骤2：评估延迟预算}
-\begin{itemize}[leftmargin=*]
-\item 延迟要求$<$100ms → 架构I（KGW，token-level）
-\item 延迟要求$<$5秒 → 架构II（SemStamp，semantic-level）
-\item 延迟要求$<$10秒 → 架构III（Multi-bit，segment-level）
-\item 延迟要求$>$10秒 → 考虑离线处理或批量处理
-\end{itemize}
-
-\textbf{步骤3：确定误报容限}
-\begin{itemize}[leftmargin=*]
-\item FPR要求$\leq$1e-5 → 架构I（KGW，检测窗口200--800 tokens）
-\item FPR要求$\leq$1e-7 → 架构II（SemStamp，完整文本检测）
-\item FPR要求$\leq$1e-9 → 架构III（Multi-bit，高精度检测）
-\item 根据误报容限调整水印强度参数（$\delta$）
-\end{itemize}
-
-\textbf{步骤4：选择威胁模型}
-\begin{itemize}[leftmargin=*]
-\item 威胁模型：释义攻击 → 架构II（SemStamp，语义级防御）
-\item 威胁模型：翻译攻击 → 架构II（X-SIR，跨语种防御）
-\item 威胁模型：窃取攻击 → 架构III（UPV，不可伪造性）
-\item 威胁模型：合谋攻击 → 架构III（Multi-user，合谋检测）
-\end{itemize}
-
-\textbf{步骤5：成本预算评估}
-\begin{itemize}[leftmargin=*]
-\item 预算$<$\$10K → 架构I（KGW，低成本）
-\item 预算$<$\$20K → 架构II（SemStamp，中等成本）
-\item 预算$>$\$20K → 架构III（Multi-bit，高成本但高价值）
-\item 考虑长期运营成本：检测成本、维护成本、升级成本
-\end{itemize}
-
-\textbf{步骤6：部署要求}
-\begin{itemize}[leftmargin=*]
-\item 开源要求 → 选择开源方案（如MarkLLM、WaterBench）
-\item 专有要求 → 选择商业方案（如SynthID-Text）
-\item 隐私保护要求 → 考虑用户隐私保护（匿名化、加密编码）
-\item 精确溯源要求 → 架构III（Multi-bit，支持精确溯源）
-\end{itemize}
-
-\textbf{实施检查清单}：
-\begin{enumerate}[leftmargin=*]
-\item 确定任务类型 → 选择架构
-\item 评估延迟预算 → 决定嵌入粒度
-\item 确定误报容限 → 设置$\delta$参数
-\item 选择威胁模型 → 决定检测端部署位置
-\item 成本预算 → 计算所需基础设施投入
-\item 部署要求 → 选择开源vs专有
-\item 性能测试 → 验证系统性能指标
-\item 安全测试 → 验证系统安全性
-\item 部署上线 → 监控系统运行状态
-\item 持续优化 → 根据运行数据优化系统参数
-\end{enumerate}
-
-\subsection{成本-收益分析与ROI评估}
-
-\textbf{部署成本详细估算}：
-
-\textbf{架构I（KGW-based系统）}：
-\begin{itemize}[leftmargin=*]
-\item 初期投入：\$2--5K
-\begin{itemize}[leftmargin=*]
-\item 基础设施：\$1--2K（服务器、网络、存储）
-\item 软件开发：\$1--2K（水印嵌入、检测服务开发）
-\item 测试与部署：\$0.5--1K（测试、部署、文档）
-\end{itemize}
-\item 运营成本：\$0.5/万次检测
-\begin{itemize}[leftmargin=*]
-\item 计算成本：\$0.3/万次（CPU、内存、网络）
-\item 存储成本：\$0.1/万次（日志、数据存储）
-\item 维护成本：\$0.1/万次（监控、告警、故障处理）
-\end{itemize}
-\item 年化成本（100万次检测/年）：\$50K（初期）+ \$50K（运营）= \$100K
-\end{itemize}
-
-\textbf{架构II（SemStamp系统）}：
-\begin{itemize}[leftmargin=*]
-\item 初期投入：\$5--10K
-\begin{itemize}[leftmargin=*]
-\item 基础设施：\$2--4K（服务器、GPU、网络、存储）
-\item 软件开发：\$2--4K（水印嵌入、检测服务、质量评估服务开发）
-\item 测试与部署：\$1--2K（测试、部署、文档）
-\end{itemize}
-\item 运营成本：\$2/万次检测
-\begin{itemize}[leftmargin=*]
-\item 计算成本：\$1.5/万次（GPU、CPU、内存、网络）
-\item 存储成本：\$0.2/万次（日志、数据存储、语义向量存储）
-\item 维护成本：\$0.3/万次（监控、告警、故障处理）
-\end{itemize}
-\item 年化成本（100万次检测/年）：\$100K（初期）+ \$200K（运营）= \$300K
-\end{itemize}
-
-\textbf{架构III（Multi-bit系统）}：
-\begin{itemize}[leftmargin=*]
-\item 初期投入：\$20--50K
-\begin{itemize}[leftmargin=*]
-\item 基础设施：\$10--20K（服务器、GPU、HSM、网络、存储）
-\item 软件开发：\$8--25K（水印嵌入、检测服务、溯源服务开发）
-\item 测试与部署：\$2--5K（测试、部署、文档）
-\end{itemize}
-\item 运营成本：\$5/万次检测
-\begin{itemize}[leftmargin=*]
-\item 计算成本：\$4/万次（GPU、CPU、内存、网络、神经网络推理）
-\item 存储成本：\$0.5/万次（日志、数据存储、溯源报告存储）
-\item 维护成本：\$0.5/万次（监控、告警、故障处理、安全审计）
-\end{itemize}
-\item 年化成本（100万次检测/年）：\$500K（初期）+ \$500K（运营）= \$1M
-\end{itemize}
-
-\textbf{收益分析}：
-
-\textbf{架构I（KGW-based系统）}：
-\begin{itemize}[leftmargin=*]
-\item 技术收益：实时检测，低延迟，支持大规模部署
-\item 成本节约：自动化检测，减少人工检测成本（节约\$50--100K/年）
-\item ROI：投资回报率$\sim$100--200\%（第一年）
-\item 成熟度：★★★★★（工业级成熟，广泛部署）
-\end{itemize}
-
-\textbf{架构II（SemStamp系统）}：
-\begin{itemize}[leftmargin=*]
-\item 技术收益：高质量内容保护，跨语种检测，高鲁棒性
-\item 成本节约：自动化质量评估，减少人工评估成本（节约\$100--200K/年）
-\item ROI：投资回报率$\sim$50--100\%（第一年）
-\item 成熟度：★★★★（研究级成熟，逐步工业部署）
-\end{itemize}
-
-\textbf{架构III（Multi-bit系统）}：
-\begin{itemize}[leftmargin=*]
-\item 技术收益：精确溯源，支持用户ID和时间戳编码，支持合谋检测
-\item 成本节约：自动化溯源，减少人工溯源成本（节约\$200--500K/年）
-\item ROI：投资回报率$\sim$50--100\%（第一年，长期收益更高）
-\item 成熟度：★★★（研究级成熟，特定场景部署）
-\end{itemize}
-
-\textbf{ROI评级总结}：
-\begin{itemize}[leftmargin=*]
-\item 架构I（KGW）：★★★★★（成熟度高，成本低，ROI高）
-\item 架构II（SemStamp）：★★★★（鲁棒性强，成本中等，ROI中等）
-\item 架构III（Multi-bit）：★★★★（精确溯源，成本高但价值大，ROI中等但长期收益高）
-\end{itemize}
-
-\textbf{选型建议}：
-\begin{itemize}[leftmargin=*]
-\item 小规模部署（$<$10万次/年）→ 架构I（KGW，低成本）
-\item 中等规模部署（10--100万次/年）→ 架构II（SemStamp，平衡成本与性能）
-\item 大规模部署（$>$100万次/年）→ 架构III（Multi-bit，高价值场景）
-\item 混合部署 → 根据场景选择不同架构，实现成本与性能的最优平衡
-\end{itemize}
-
-\section{十大开放问题与未来研究方向}
-
-\subsection{本章在整体框架中的位置}
-
-本章提出形式化的开放问题，包含难度评估、资源需求和预期影响，提供研究路线图。
-
-\subsection{十大系统化开放问题}
-
-\subsubsection{问题1$\star\star\star\star\star$: 通用无偏多比特水印设计}
-
-\textbf{陈述}：是否存在算法同时满足：
-\begin{enumerate}[leftmargin=*]
-\item 分布不改变 (Unbiased)
-\item $k$比特容量 ($k \geq 5$)
-\item 鲁棒性$>$90\% 对所有自然释义
-\item 检测AUC$>$0.95 用$\leq$500 tokens
-\end{enumerate}
-
-\textbf{当前最优}：StealthInk (多比特无偏)，但只支持$k \leq 3$，容量受限。
-
-\textbf{悬赏}：若成立，打破"容量-鲁棒-质量"三难。
-
-\textbf{影响}：使代码溯源方案部署成本↓50\%
-
-\subsubsection{问题2$\star\star\star\star\star$: 形式化不可能性定理的紧性}
-
-\textbf{陈述}：ICML 2024的不可能性证明中，"自然假设"是否必要且充分？
-
-\textbf{当前理解}：
-\begin{itemize}[leftmargin=*]
-\item 必要性：已证 (反例难以构造)
-\item 充分性：未知 (可能存在工程绕过)
-\end{itemize}
-
-\textbf{开放点}：
-\begin{itemize}[leftmargin=*]
-\item 假设1: 模型访问仅限token概率
-\item 假设2: 攻击不改变语言分布
-\item 是否存在打破这两个假设的防御？[如硬件水印+可信执行环境?]
-\end{itemize}
-
-\subsubsection{问题3$\star\star\star\star$: 黑盒自适应攻击的复杂度界}
-
-\textbf{陈述}：给定黑盒API查询预算$Q$，攻击者使用自适应策略破坏水印的成功率下界为？
-
-\textbf{当前知识}：
-\begin{itemize}[leftmargin=*]
-\item $Q=1000$: 成功率 $\sim$60\% (贪心)
-\item $Q=10000$: 成功率 $\sim$80\% (遗传算法)
-\item $Q \to \infty$: 上界趋向1
-\end{itemize}
-
-\textbf{未知}：紧密界是什么？
-
-\textbf{学术价值}：指导最小安全$Q$的设置
-
-\subsubsection{问题4$\star\star\star$: 跨语种与多模态的统一水印}
-
-\textbf{陈述}：是否存在对(文本→中文翻译→图像→音频)都保持水印的统一框架？
-
-\textbf{当前困境}：
-\begin{itemize}[leftmargin=*]
-\item 文-文: 翻译AUC从0.95→0.67 失效
-\item 文-图: 无统一基准
-\item 图-音: 尚未研究
-\end{itemize}
-
-\textbf{关键瓶颈}：跨模态的语义对齐机制
-
-\textbf{推测方向}：基于CLIP的共享嵌入空间
-
-\subsubsection{问题5$\star\star\star\star$: 可审计与零知识证明的集成}
-
-\textbf{陈述}：能否设计水印系统使得：
-\begin{itemize}[leftmargin=*]
-\item 生成者可证明内容是自己生成的(PoG)
-\item 但不暴露水印算法参数
-\item 第三方可验证不可伪造性
-\end{itemize}
-
-\textbf{当前}：UPV实现了后两点，但PoG还需人工审计。
-
-\textbf{挑战}：ZKP与水印的兼容性未知
-
-\textbf{实现困难}：需设计能证明"这个文本通过我的模型生成"而不泄露密钥的协议
-
-\subsubsection{问题6$\star\star\star$: 水印与微调的相互作用}
-
-\textbf{陈述}：用户对标记水印的模型进行LoRA/QLoRA微调后，水印是否保持？鲁棒性如何衰减？
-
-\textbf{当前知识}：完全缺失
-
-\textbf{重要性}：在边缘设备部署时常见(如手机微调)
-
-\textbf{初步假设}：
-\begin{itemize}[leftmargin=*]
-\item Token级水印：在适配层微调中严重失效
-\item 语义级水印：可能部分保持(需验证)
-\item 多比特水印：未知
-\end{itemize}
-
-\textbf{研究方向}：
-\begin{itemize}[leftmargin=*]
-\item 理论：分析微调对PRF/LSH的影响
-\item 经验：在Alpaca/LIMA等微调基准测试
-\end{itemize}
-
-\subsubsection{问题7$\star\star\star$: 对抗性合成数据与水印的军备竞赛}
-
-\textbf{陈述}：攻击者用对抗性合成数据(adversarial examples)在黑盒API上微调，是否能比传统释义攻击更高效地破坏水印？
-
-\textbf{当前}：未系统研究
-
-\textbf{初步证据}：
-\begin{itemize}[leftmargin=*]
-\item 释义攻击成功率 $\sim$80\%, 成本 $\sim$500查询
-\item 对抗样本生成成本 $\sim$100查询？ (推测)
-\end{itemize}
-
-\textbf{若成立含义}：防御需要与对抗鲁棒性联动
-
-\subsubsection{问题8$\star\star$: 水印与幻觉(Hallucination)的冲突}
-
-\textbf{陈述}：是否存在设置使得：
-\begin{itemize}[leftmargin=*]
-\item 强水印迫使模型生成高概率tokens
-\item 这反过来增加幻觉率
-\end{itemize}
-
-\textbf{初步观察(WaterBench)}：某些方法检测率高但幻觉率也升高，相关系数 $\rho \approx 0.45$ (中等正相关)
-
-\textbf{研究需求}：
-\begin{itemize}[leftmargin=*]
-\item 因果机制的识别
-\item 幻觉指标的标准化(当前标准不统一)
-\item 权衡界的推导
-\end{itemize}
-
-\subsubsection{问题9$\star$: 硬件-算法协同的可能性边界}
-
-\textbf{陈述}：在ARM/RISC-V等嵌入式硬件上实现低延迟水印的理论可能性是什么？
-
-\textbf{当前}：多数工作假设云端部署
-
-\textbf{挑战}：
-\begin{itemize}[leftmargin=*]
-\item LSH计算成本高
-\item 神经网络检测不可行
-\item 白盒访问受限
-\end{itemize}
-
-\textbf{研究方向}：
-\begin{itemize}[leftmargin=*]
-\item 硬件原语(如ASIC)的协议设计
-\item 定制ISA指令集的提案
-\item 可信执行环境(TEE)的集成
-\end{itemize}
-
-\subsection{问题间的依赖关系}
-
-每个问题标题中的星号（$\star$）符号表示该问题的\textbf{优先级评分}，用于评估问题的重要性和紧迫性。评分标准如下：
-
-\textbf{优先级评分说明}：
-\begin{itemize}[leftmargin=*]
-\item $\star\star\star\star\star$（5星）：基础理论突破 + 直接应用价值。最高优先级，具有突破性理论意义和直接的实际应用价值。
-\item $\star\star\star\star$（4星）：高应用价值 OR 填补关键研究空白。高优先级，在应用价值或研究空白方面具有显著重要性。
-\item $\star\star\star$（3星）：中等价值，有一定难度。中等优先级，具有研究价值但难度适中。
-\item $\star\star$（2星）：相对边缘，但有探索价值。较低优先级，属于边缘研究方向但仍有探索意义。
-\item $\star$（1星）：长期研究方向，近期难有突破。最低优先级，属于长期研究方向，短期内难以取得突破。
-\end{itemize}
-
-\textbf{排序逻辑}：问题按优先级从高到低排列，优先级高的问题通常具有更强的理论突破潜力或更直接的应用价值，应优先投入研究资源。
-
-\subsection{各问题的难度等级与资源需求}
-
-\textbf{预期研究时间表}：
-\begin{itemize}[leftmargin=*]
-\item 问题1--3: 2--3年 (基础理论)
-\item 问题4--6: 3--5年 (工程实践)
-\item 问题7--8: 5--10年 (长期研究)
-\item 问题9: 10+年 (硬件协同)
-\end{itemize}
-
-
 \section{结论与反思}
 
 本文对近五年（2021--2025）大模型文本语义水印领域进行了系统性综述，不仅整理了30篇核心论文，更重要的是揭示了领域发展的内在逻辑和理论根源。
@@ -2050,8 +1501,6 @@ UPV通过分离生成和检测网络实现不可伪造的公开验证：
 
 \item \textbf{强水印不可能性理论不等于工程不可行}：虽然在自然假设下强水印不可实现，但在现实威胁模型下，通过密钥管理、检测API限流/凭证化、跨语一致性增强等技术手段，仍可形成足够强且可部署的方案。\textbf{工程可行标准}：在允许5\%误报率、检测成本$<$ \$10/万次检测的场景下，多比特水印可实现有效溯源（匹配率$\geq$95\%）。\textbf{成本效益分析}：Watermark Stealing攻击成本$<$ \$50，若防御方案的成本$>$ \$100，则工程价值有限；但在检测成本$<$ \$10的场景下，防御方案具有明显优势（成本效益比$>$10:1）。
 \end{enumerate}
-
-\textbf{场景化建议}：根据任务特性选择合适的水印方法：（1）\textbf{实时对话场景}：优先选择token级方法（KGW），嵌入开销低（$\sim$1.1$\times$），检测开销小（O(n)），延迟$<$100ms，适用于客服机器人、实时聊天等场景；（2）\textbf{长文本生成场景}：优先选择语义级方法（SemStamp），虽然嵌入开销较高（$\sim$1.5--2.0$\times$），但检测开销小（O(n)），且鲁棒性强（AUC $\sim$0.85--0.90），适用于文档摘要、新闻生成等场景；（3）\textbf{代码生成场景}：优先选择多比特方法（Provably Robust Multi-bit），匹配率$\sim$97.6\%，可嵌入用户ID、时间戳等信息，适用于代码生成、API调用追踪等场景；（4）\textbf{创意写作场景}：优先选择无偏方法（Unbiased、DiPmark），质量损失最小（Perplexity变化$<$2\%），适用于文学创作、内容生成等场景；（5）\textbf{跨语种场景}：优先选择跨语种防御方法（X-SIR），可将跨语种AUC从$\sim$0.67提升至$\sim$0.87，适用于多语言翻译、国际化应用等场景。
 
 \textbf{"多重下界困局"的统一认识}：
 
@@ -2078,21 +1527,20 @@ UPV通过分离生成和检测网络实现不可伪造的公开验证：
 
 \textbf{研究意义：}
 
-本文提出的分类框架、定量分析方法和标准化评估框架，为研究人员提供了系统化的技术路线图，并为未来研究方向提供了明确指导。同时，本文揭示的争议点和挑战，为领域发展提供了重要的参考依据。场景化建议为不同应用场景提供了具体的方法选择指导，有助于提高方法的实际应用价值。
+本文提出的分类框架、定量分析方法和标准化评估框架，为研究人员提供了系统化的技术路线图。同时，本文揭示的争议点和挑战，为领域发展提供了重要的参考依据。
 
 更重要的是，本文建立了理论统一框架，将看似分散的争议点统一在理论下界约束下，为领域发展提供了更深刻的认识。这种理论统一不仅有助于理解现有方法的局限，也为未来研究指明了方向。
 
 \textbf{对学术界与工业界的建议}：
 
 \begin{itemize}[leftmargin=*]
-\item \textbf{学术界}：应聚焦于理论下界的紧性分析、工程可行方案的探索，以及九个开放问题的解决
-\item \textbf{工业界}：应根据应用场景选择合适的架构，在理论下界约束下实现工程可行性
-\item \textbf{研究者}：应关注跨学科方法的应用，从密码学、信息论、机器学习安全等领域汲取新的思路
+\item \textbf{学术界}：应聚焦于理论下界的紧性分析、定量分析方法的完善，以及形式化框架的进一步深化
+\item \textbf{研究者}：应关注跨学科方法的应用，从密码学、信息论、机器学习安全等领域汲取新的思路，并加强定量分析在方法评估中的应用
 \end{itemize}
 
 \textbf{局限性与未来工作：}
 
-本文的局限性包括：（1）论文筛选标准可能存在主观性，未来可通过多专家评审和自动化筛选方法改进；（2）定量分析基于已有论文报告的数据，可能存在实验设置差异，未来需要统一基准验证；（3）时间范围覆盖至2025年10月，后续研究需要持续更新。未来工作应聚焦于统一基准建立、短文本场景优化、跨语一致性增强、黑盒攻防演练以及硬件/系统协同等方向。
+本文的局限性包括：（1）论文筛选标准可能存在主观性，未来可通过多专家评审和自动化筛选方法改进；（2）定量分析基于已有论文报告的数据，可能存在实验设置差异，未来需要统一基准验证；（3）时间范围覆盖至2025年10月，后续研究需要持续更新。未来工作应聚焦于统一基准建立、理论下界紧性分析、定量分析方法的进一步完善，以及形式化框架的深化。
 
 \section*{致谢}
 
