@@ -2,7 +2,6 @@
 
 \usepackage{usenix2020_SOUPS}
 \usepackage[hyphens,obeyspaces,spaces]{url}
-\usepackage[breaklinks=true]{hyperref}
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -20,6 +19,8 @@
 % \setCJKsansfont{SimHei}
 % \setCJKmonofont{FangSong}
 
+% hyperref包必须在所有其他包之后加载
+\usepackage[breaklinks=true]{hyperref}
 % 设置超链接颜色
 \hypersetup{
     colorlinks=true,
@@ -33,13 +34,17 @@
 % 如果需要自定义，可以取消下面的注释
 % \setlength{\columnsep}{0.25in}
 
-\title{大模型文本语义水印研究综述：\\
-近五年（2021--2025）Top30论文分析与争议点梳理}
+\title{Beyond Token-Level Watermarks: A Systematic Analysis of\\
+Semantic Watermarking with Theoretical Bounds and Attack-Defense Dynamics}
 
-\author{Yunhao\\
+\author{
+{\rm Yunhao}\\
 \and
-Lenovo Research\\
-}
+{\rm Yilong}\\
+\and
+{\rm Qingxiao}\\
+} % end author
+
 
 \date{}
 
@@ -1432,7 +1437,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 感谢所有为本研究提供支持的匿名 reviewers 和 contributors。
 
 % 参考文献
-\bibliographystyle{abbrv}
+\section*{参考文献}
 \begin{thebibliography}{99}
 \raggedright
 \sloppy
