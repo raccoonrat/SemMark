@@ -265,6 +265,10 @@ Semantic Watermarking with Theoretical Bounds and Attack-Defense Dynamics}
 \item \textbf{本综述}：更深的理论与实践洞察，适合研究者与工程师。重点在于理论深度、争议点分析和部署指导。
 \end{itemize}
 
+\textbf{}
+
+
+
 \subsection{跨学科联系与借鉴}
 
 \subsubsection{从密码学中的启示}
@@ -840,7 +844,11 @@ UPV~\cite{upv2024} & 0.88--0.93 & $\sim$600 & 高 & 中 & WaterBench \\
 \textbf{第三层原因（深层）}：根本问题≠"语言耦合"，而是"水印语义不变性与表面形式变化的冲突"
 
 \textbf{定量因果分解}：
-$$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semantic\_drift}} + C_{\text{detection}} = 0.10 + 0.08 + 0.04 + 0.03 = 0.25$$
+\begin{align*}
+\Delta AU &= C_{\text{word}} + C_{\text{freq}} + C_{\text{sem}} + C_{\text{det}} \\
+          &= 0.10 + 0.08 + 0.04 + 0.03 = 0.25
+\end{align*}
+其中 $C_{\text{word}}$、$C_{\text{freq}}$、$C_{\text{sem}}$、$C_{\text{det}}$ 分别表示词表变化、频率偏移、语义漂移和检测器失效的贡献。
 
 [总下降28\%，通过消融实验或逆向工程估计各分量]
 
@@ -896,7 +904,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 \item 第一层原因（表层）：翻译导致词表变化 → 绿/红词划分失效 → AUC下降
 \item 第二层原因（中层）：KGW基于PRF的假设在不同语言不稳定，翻译器非单射导致PRF冲突
 \item 第三层原因（深层）：根本问题是"水印语义不变性与表面形式变化的冲突"，而非语言耦合
-\item 定量因果分解：$\Delta AU = 0.10 + 0.08 + 0.04 + 0.03 = 0.25$ [总下降28\%]
+\item 定量因果分解：$\Delta AU = 0.10 + 0.08 + 0.04 + 0.03 = 0.25$（总下降28\%）
 \end{itemize}
 
 \textbf{反事实验证}：
