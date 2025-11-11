@@ -1,0 +1,148 @@
+Reference Link Check Report
+================================================================================
+
+Check Time: 2025-11-11 09:39:02
+Total: 32 links
+Available: 30 links
+Unavailable: 2 links
+
+Unavailable Links:
+--------------------------------------------------------------------------------
+[FAIL] StealthInk GMU
+  https://napl.gmu.edu/pubs/CPapers/Jiang-StealthInk-ICML2025.pdf
+  Status: [FAIL] Connection Error
+
+[FAIL] ACM Computing Surveys
+  https://dlnext.acm.org/doi/pdf/10.1145/3691626
+  Status: [FAIL] Forbidden (403)
+
+All Links Details:
+--------------------------------------------------------------------------------
+[OK] SemStamp NAACL 2024
+  https://aclanthology.org/2024.naacl-long.226/
+  Status: [OK] Available
+
+[OK] SemaMark NAACL 2024
+  https://aclanthology.org/2024.findings-naacl.40.pdf
+  Status: [OK] Available
+
+[OK] PostMark EMNLP 2024
+  https://aclanthology.org/2024.emnlp-main.506/
+  Status: [OK] Available
+
+[OK] Duwak ACL 2024
+  https://aclanthology.org/2024.findings-acl.678/
+  Status: [OK] Available
+
+[OK] GumbelSoft ACL 2024
+  https://aclanthology.org/2024.acl-long.315/
+  Status: [OK] Available
+
+[OK] MorphMark ACL 2025
+  https://aclanthology.org/2025.acl-long.240.pdf
+  Status: [OK] Available
+
+[OK] WaterBench ACL 2024
+  https://aclanthology.org/2024.acl-long.83/
+  Status: [OK] Available
+
+[OK] WaterPark EMNLP 2025
+  https://aclanthology.org/2025.findings-emnlp.1148/
+  Status: [OK] Available
+
+[OK] MCMARK ACL 2025
+  https://aclanthology.org/2025.acl-long.391.pdf
+  Status: [OK] Available
+
+[OK] STA-1 ACL 2025
+  https://aclanthology.org/2025.acl-long.1005.pdf
+  Status: [OK] Available
+
+[OK] SCTS ACL 2024
+  https://aclanthology.org/2024.acl-long.464/
+  Status: [OK] Available
+
+[OK] WaterJudge NAACL 2024
+  https://aclanthology.org/2024.findings-naacl.223.xml
+  Status: [OK] Available
+
+[OK] ACL Tutorial 2024
+  https://aclanthology.org/2024.acl-tutorials.6/
+  Status: [OK] Available
+
+[OK] Adaptive Text Watermark ICML 2024
+  https://proceedings.mlr.press/v235/liu24e.html
+  Status: [OK] Available
+
+[OK] KGW ICML 2023
+  https://proceedings.mlr.press/v202/kirchenbauer23a/kirchenbauer23a.pdf
+  Status: [OK] Available
+
+[OK] Reliability ICLR 2024
+  https://proceedings.iclr.cc/paper_files/paper/2024/hash/d78e9e4316e1714fbb0f20be66f8044c-Abstract-Conference.html
+  Status: [OK] Available
+
+[OK] Unbiased ICLR 2024
+  https://proceedings.iclr.cc/paper_files/paper/2024/hash/c5b00c5bdcc6fe35907dbcca03d27652-Abstract-Conference.html
+  Status: [OK] Available
+
+[OK] UPV ICLR 2024
+  https://proceedings.iclr.cc/paper_files/paper/2024/hash/214d2cffc381938be6f7254d5382904f-Abstract-Conference.html
+  Status: [OK] Available
+
+[OK] No Free Lunch NeurIPS 2024
+  https://proceedings.neurips.cc/paper_files/paper/2024/file/fa86a9c7b9f341716ccb679d1aeb9afa-Paper-Conference.pdf
+  Status: [OK] Available
+
+[OK] Watermarks in the Sand
+  https://arxiv.org/abs/2306.04634
+  Status: [OK] Available
+
+[OK] Watermark Stealing
+  https://arxiv.org/abs/2310.07710v1
+  Status: [OK] Available
+
+[OK] Exploiting Strengths
+  https://arxiv.org/abs/2402.19361
+  Status: [OK] Available
+
+[OK] Multi-bit Watermark
+  https://arxiv.org/abs/2402.16187
+  Status: [OK] Available
+
+[OK] Nature SynthID-Text
+  https://www.nature.com/articles/s41586-024-08025-4.pdf
+  Status: [OK] Available
+
+[OK] GitHub MarkLLM
+  https://github.com/THU-BPM/MarkLLM
+  Status: [OK] Available
+
+[OK] OpenReview DiPmark
+  https://openreview.net/forum?id=rIOl7KbSkv
+  Status: [OK] Available
+
+[OK] Cross-lingual Watermark
+  https://cross-lingual-watermark.github.io/
+  Status: [OK] Available
+
+[FAIL] StealthInk GMU
+  https://napl.gmu.edu/pubs/CPapers/Jiang-StealthInk-ICML2025.pdf
+  Status: [FAIL] Connection Error
+
+[OK] IACR Multi-User
+  https://eprint.iacr.org/2024/759.pdf
+  Status: [OK] Available
+
+[OK] USENIX Security REMARK
+  https://www.usenix.org/conference/usenixsecurity24/presentation/zhang-ruisi
+  Status: [OK] Available
+
+[FAIL] ACM Computing Surveys
+  https://dlnext.acm.org/doi/pdf/10.1145/3691626
+  Status: [FAIL] Forbidden (403)
+
+[OK] ACL Tutorial Leililab
+  https://leililab.github.io/llm_watermark_tutorial/ACL-tut-LLM-watermark-part-5.pdf
+  Status: [OK] Available
+

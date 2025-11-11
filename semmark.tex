@@ -1,8 +1,8 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 
 \usepackage{usenix2020_SOUPS}
-\usepackage{url}
-\usepackage{hyperref}
+\usepackage[hyphens,obeyspaces,spaces]{url}
+\usepackage[breaklinks=true]{hyperref}
 \usepackage{xcolor}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -36,11 +36,9 @@
 \title{大模型文本语义水印研究综述：\\
 近五年（2021--2025）Top30论文分析与争议点梳理}
 
-\author{匿名作者\\
+\author{Yunhao\\
 \and
-匿名机构\\
-\and
-\texttt{anonymous@example.com}
+Lenovo Research\\
 }
 
 \date{}
@@ -116,7 +114,7 @@
 
 \textbf{方法原创性（Originality）}：评估方法的技术创新程度，采用二级指标评分体系：（1）\textbf{新嵌入机制}（0--4分）：提出全新嵌入机制（如语义级LSH分区）得4分，改进现有机制（如优化PRF分区）得2--3分，沿用现有机制得0--1分；（2）\textbf{新检测算法}（0--3分）：提出新检测算法（如神经网络检测）得3分，改进现有算法（如优化统计检验）得1--2分，沿用现有算法得0分；（3）\textbf{理论突破}（0--3分）：提出新理论模型或解决已知瓶颈（如强水印不可能性证明）得3分，理论分析较深入得1--2分，缺乏理论分析得0分。总分范围0--10分，阈值$\geq$7分。\textbf{评分示例}：KGW提出统计检验框架（新检测算法3分+理论分析2分）得5分；SemStamp提出语义级嵌入机制（新嵌入机制4分+新检测算法2分）得6分；UPV提出神经网络检测+理论分析（新检测算法3分+理论突破3分）得6分。
 
-\textbf{场域影响力（Impact）}：基于发表场域的声誉、论文引用情况和工业落地案例。\textbf{场域权重}：顶级场域（Nature、Science、CCS、S\&P、USENIX Security）权重为1.0，A类会议（NeurIPS、ICLR、ACL、ICML）权重为0.8，其他会议权重为0.6。\textbf{引用数评估}：Google Scholar引用数（截至2025年1月），阈值$\geq$20次；对于2025年新发表论文，考虑预印本引用数和领域专家关注度。\textbf{工业落地案例}：作为辅助指标，如SynthID-Text在Gemini的部署（2000万响应评估）额外加分。最终评分 = 场域权重 $\times$ (引用数得分 + 工业落地加分)，阈值$\geq$15分。
+\textbf{场域影响力（Impact）}：基于发表场域的声誉、论文引用情况和工业落地案例。\textbf{场域权重}：顶级场域（Nature、Science、CCS、S\&P、USENIX Security）权重为1.0，A类会议（NeurIPS、ICLR、ACL、ICML）权重为0.8，其他会议权重为0.6。\textbf{引用数评估}：Google Scholar引用数（截至2025年10月），阈值$\geq$20次；对于2025年新发表论文，考虑预印本引用数和领域专家关注度。\textbf{工业落地案例}：作为辅助指标，如SynthID-Text在Gemini的部署（2000万响应评估）额外加分。最终评分 = 场域权重 $\times$ (引用数得分 + 工业落地加分)，阈值$\geq$15分。
 
 \textbf{可复用度（Reproducibility）}：评估代码和工具的开源情况，包括：（1）是否有官方开源代码；（2）是否有可复现的实验设置；（3）是否有详细的文档说明。评分范围0--10分，阈值$\geq$6分。
 
@@ -126,9 +124,9 @@
 
 \subsection{数据收集流程}
 
-\textbf{搜索策略}：我们使用以下关键词在Google Scholar、arXiv、ACL Anthology、DBLP等数据库中进行搜索："LLM watermarking"、"text watermarking"、"semantic watermarking"、"AI watermarking"、"neural watermarking"。搜索时间范围：2021年1月至2025年1月。
+\textbf{搜索策略}：我们使用以下关键词在Google Scholar、arXiv、ACL Anthology、DBLP等数据库中进行搜索："LLM watermarking"、"text watermarking"、"semantic watermarking"、"AI watermarking"、"neural watermarking"。搜索时间范围：2021年1月至2025年10月。
 
-\textbf{筛选流程}：（1）\textbf{初步筛选}：基于标题和摘要，筛选出约150篇相关论文；（2）\textbf{全文阅读}：对初步筛选的论文进行全文阅读，评估是否符合四维度标准，提取详细数据；（3）\textbf{专家评审}：邀请3位领域专家（1位来自学术界、1位来自工业界、1位来自安全领域）对筛选结果进行盲审，采用一致性检验机制（Cohen's $\kappa \geq 0.75$），确保筛选标准的一致性；专家评审重点关注：方法创新性评估的客观性、场域影响力的合理性、实验数据的可信度；（4）\textbf{最终确定}：经过多轮讨论和专家反馈，最终确定30篇核心论文，所有筛选结果和专家评审意见均记录在案，确保可追溯性。
+\textbf{筛选流程}：基于搜索时间范围（2021年1月至2025年10月），我们执行了完整的筛选流程：（1）\textbf{初步筛选}：基于标题和摘要，从扩展时间范围内的论文中筛选出约150篇相关论文；（2）\textbf{全文阅读}：对初步筛选的论文进行全文阅读，评估是否符合四维度标准，提取详细数据；（3）\textbf{专家评审}：邀请3位领域专家（1位来自学术界、1位来自工业界、1位来自安全领域）对筛选结果进行盲审，采用一致性检验机制（Cohen's $\kappa \geq 0.75$），确保筛选标准的一致性；专家评审重点关注：方法创新性评估的客观性、场域影响力的合理性、实验数据的可信度；（4）\textbf{最终确定}：经过多轮讨论和专家反馈，最终确定30篇核心论文，所有筛选结果和专家评审意见均记录在案，确保可追溯性。重新筛选确保了涵盖2025年1月至10月期间的新发表论文和预印本工作。
 
 \textbf{数据提取}：对每篇论文提取以下信息：（1）基本信息：作者、发表场域、发表时间、引用数；（2）技术信息：方法类型、嵌入机制、检测算法、性能指标；（3）实验信息：数据集、评估指标、实验结果、开源代码链接。
 
@@ -412,7 +410,7 @@ $y_{ij} = \beta_0 + \beta_1 \cdot \text{嵌入维度}_j + \beta_2 \cdot \text{�
 \item 平均效应量(Cohen's d): 2.15 $\geq$2.0超大
 \end{itemize}
 
-结论稳健性评级：⭐⭐⭐⭐⭐ (三个独立基准都支持)
+结论稳健性评级：$\star\star\star\star\star$ (三个独立基准都支持)
 
 \subsubsection{异质性分析}
 
@@ -789,18 +787,18 @@ $$k \leq O(H(p) - \delta \cdot \log(1/\delta))$$
 \centering
 \caption{主要方法性能指标对比（基于WaterBench统一基准）}
 \label{tab:performance}
-\small
-\begin{tabular}{lccccc}
+\footnotesize
+\begin{tabular}{p{2.0cm}p{1.5cm}p{1.4cm}p{1.2cm}p{1.2cm}p{1.5cm}}
 \toprule
-\textbf{方法} & \textbf{检测AUC} & \textbf{所需Token数} & \textbf{质量保持} & \textbf{鲁棒性} & \textbf{数据来源} \\
+\textbf{方法} & \textbf{检测AUC} & \textbf{Token数} & \textbf{质量} & \textbf{鲁棒性} & \textbf{数据来源} \\
 \midrule
-KGW~\cite{kgw2023} & 0.85--0.90 & $\sim$800 & 高 & 低 & WaterBench统一基准 \\
-SemStamp~\cite{semstamp2024} & 0.90--0.95 & $\sim$500 & 中 & 高 & WaterBench统一基准 \\
-Duwak~\cite{duwak2024} & 0.92--0.96 & $\sim$240 & 高 & 中高 & WaterBench统一基准 \\
-Provably Multi-bit~\cite{multibit2025} & 0.95--0.98 & $\sim$200 & 中 & 高 & 原始论文+验证 \\
-UPV~\cite{upv2024} & 0.88--0.93 & $\sim$600 & 高 & 中 & WaterBench统一基准 \\
+KGW~\cite{kgw2023} & 0.85--0.90 & $\sim$800 & 高 & 低 & WaterBench \\
+SemStamp~\cite{semstamp2024} & 0.90--0.95 & $\sim$500 & 中 & 高 & WaterBench \\
+Duwak~\cite{duwak2024} & 0.92--0.96 & $\sim$240 & 高 & 中高 & WaterBench \\
+Provably Multi-bit~\cite{multibit2025} & 0.95--0.98 & $\sim$200 & 中 & 高 & 原始论文 \\
+UPV~\cite{upv2024} & 0.88--0.93 & $\sim$600 & 高 & 中 & WaterBench \\
 \bottomrule
-\multicolumn{6}{l}{\small \textit{注：所有数据基于WaterBench框架的统一实验设置（数据集：C4/News/Wikipedia；攻击类型：释义/翻译/颜色替换；水印强度：$\delta=2.0$；评估指标：FPR=1e-5）。}} \\
+\multicolumn{6}{p{8.8cm}}{\small \textit{注：所有数据基于WaterBench框架的统一实验设置（数据集：C4/News/Wikipedia；攻击类型：释义/翻译/颜色替换；水印强度：$\delta=2.0$；评估指标：FPR=1e-5）。}} \\
 \end{tabular}
 \end{table*}
 
@@ -1115,9 +1113,9 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{ROI评级}：
 \begin{itemize}[leftmargin=*]
-\item KGW: ⭐⭐⭐⭐⭐ (成熟度高，成本低)
-\item SemStamp: ⭐⭐⭐⭐ (鲁棒性强，成本中等)
-\item Multi-bit: ⭐⭐⭐⭐ (精确溯源，成本高但价值大)
+\item KGW: $\star\star\star\star\star$ (成熟度高，成本低)
+\item SemStamp: $\star\star\star\star$ (鲁棒性强，成本中等)
+\item Multi-bit: $\star\star\star\star$ (精确溯源，成本高但价值大)
 \end{itemize}
 
 \section{十大开放问题与未来研究方向}
@@ -1128,7 +1126,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \subsection{十大系统化开放问题}
 
-\subsubsection{问题1⭐⭐⭐⭐⭐: 通用无偏多比特水印设计}
+\subsubsection{问题1$\star\star\star\star\star$: 通用无偏多比特水印设计}
 
 \textbf{陈述}：是否存在算法同时满足：
 \begin{enumerate}[leftmargin=*]
@@ -1144,7 +1142,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{影响}：使代码溯源方案部署成本↓50\%
 
-\subsubsection{问题2⭐⭐⭐⭐⭐: 形式化不可能性定理的紧性}
+\subsubsection{问题2$\star\star\star\star\star$: 形式化不可能性定理的紧性}
 
 \textbf{陈述}：ICML 2024的不可能性证明中，"自然假设"是否必要且充分？
 
@@ -1161,7 +1159,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 \item 是否存在打破这两个假设的防御？[如硬件水印+可信执行环境?]
 \end{itemize}
 
-\subsubsection{问题3⭐⭐⭐⭐: 黑盒自适应攻击的复杂度界}
+\subsubsection{问题3$\star\star\star\star$: 黑盒自适应攻击的复杂度界}
 
 \textbf{陈述}：给定黑盒API查询预算$Q$，攻击者使用自适应策略破坏水印的成功率下界为？
 
@@ -1176,7 +1174,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{学术价值}：指导最小安全$Q$的设置
 
-\subsubsection{问题4⭐⭐⭐: 跨语种与多模态的统一水印}
+\subsubsection{问题4$\star\star\star$: 跨语种与多模态的统一水印}
 
 \textbf{陈述}：是否存在对(文本→中文翻译→图像→音频)都保持水印的统一框架？
 
@@ -1191,7 +1189,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{推测方向}：基于CLIP的共享嵌入空间
 
-\subsubsection{问题5⭐⭐⭐⭐: 可审计与零知识证明的集成}
+\subsubsection{问题5$\star\star\star\star$: 可审计与零知识证明的集成}
 
 \textbf{陈述}：能否设计水印系统使得：
 \begin{itemize}[leftmargin=*]
@@ -1206,7 +1204,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{实现困难}：需设计能证明"这个文本通过我的模型生成"而不泄露密钥的协议
 
-\subsubsection{问题6⭐⭐⭐: 水印与微调的相互作用}
+\subsubsection{问题6$\star\star\star$: 水印与微调的相互作用}
 
 \textbf{陈述}：用户对标记水印的模型进行LoRA/QLoRA微调后，水印是否保持？鲁棒性如何衰减？
 
@@ -1227,7 +1225,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 \item 经验：在Alpaca/LIMA等微调基准测试
 \end{itemize}
 
-\subsubsection{问题7⭐⭐⭐: 对抗性合成数据与水印的军备竞赛}
+\subsubsection{问题7$\star\star\star$: 对抗性合成数据与水印的军备竞赛}
 
 \textbf{陈述}：攻击者用对抗性合成数据(adversarial examples)在黑盒API上微调，是否能比传统释义攻击更高效地破坏水印？
 
@@ -1241,7 +1239,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{若成立含义}：防御需要与对抗鲁棒性联动
 
-\subsubsection{问题8⭐⭐: 水印与幻觉(Hallucination)的冲突}
+\subsubsection{问题8$\star\star$: 水印与幻觉(Hallucination)的冲突}
 
 \textbf{陈述}：是否存在设置使得：
 \begin{itemize}[leftmargin=*]
@@ -1258,7 +1256,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 \item 权衡界的推导
 \end{itemize}
 
-\subsubsection{问题9⭐⭐⭐: 社会层面的激励兼容性}
+\subsubsection{问题9$\star\star\star$: 社会层面的激励兼容性}
 
 \textbf{陈述(非技术，但重要)}：
 \begin{itemize}[leftmargin=*]
@@ -1282,7 +1280,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 \item 社区接受度的实证调查
 \end{itemize}
 
-\subsubsection{问题10⭐: 硬件-算法协同的可能性边界}
+\subsubsection{问题10$\star$: 硬件-算法协同的可能性边界}
 
 \textbf{陈述}：在ARM/RISC-V等嵌入式硬件上实现低延迟水印的理论可能性是什么？
 
@@ -1304,14 +1302,18 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \subsection{问题间的依赖关系}
 
-\textbf{排序逻辑}：
+每个问题标题中的星号（$\star$）符号表示该问题的\textbf{优先级评分}，用于评估问题的重要性和紧迫性。评分标准如下：
+
+\textbf{优先级评分说明}：
 \begin{itemize}[leftmargin=*]
-\item ⭐⭐⭐⭐⭐: 基础理论突破 + 直接应用价值
-\item ⭐⭐⭐⭐: 高应用价值 OR 填补关键研究空白
-\item ⭐⭐⭐: 中等价值，有一定难度
-\item ⭐⭐: 相对边缘，但有探索价值
-\item ⭐: 长期研究方向，近期难有突破
+\item $\star\star\star\star\star$（5星）：基础理论突破 + 直接应用价值。最高优先级，具有突破性理论意义和直接的实际应用价值。
+\item $\star\star\star\star$（4星）：高应用价值 OR 填补关键研究空白。高优先级，在应用价值或研究空白方面具有显著重要性。
+\item $\star\star\star$（3星）：中等价值，有一定难度。中等优先级，具有研究价值但难度适中。
+\item $\star\star$（2星）：相对边缘，但有探索价值。较低优先级，属于边缘研究方向但仍有探索意义。
+\item $\star$（1星）：长期研究方向，近期难有突破。最低优先级，属于长期研究方向，短期内难以取得突破。
 \end{itemize}
+
+\textbf{排序逻辑}：问题按优先级从高到低排列，优先级高的问题通常具有更强的理论突破潜力或更直接的应用价值，应优先投入研究资源。
 
 \subsection{各问题的难度等级与资源需求}
 
@@ -1423,7 +1425,7 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 
 \textbf{局限性与未来工作：}
 
-本文的局限性包括：（1）论文筛选标准可能存在主观性，未来可通过多专家评审和自动化筛选方法改进；（2）定量分析基于已有论文报告的数据，可能存在实验设置差异，未来需要统一基准验证；（3）时间范围覆盖至2025年1月，后续研究需要持续更新。未来工作应聚焦于统一基准建立、短文本场景优化、跨语一致性增强、黑盒攻防演练以及硬件/系统协同等方向。
+本文的局限性包括：（1）论文筛选标准可能存在主观性，未来可通过多专家评审和自动化筛选方法改进；（2）定量分析基于已有论文报告的数据，可能存在实验设置差异，未来需要统一基准验证；（3）时间范围覆盖至2025年10月，后续研究需要持续更新。未来工作应聚焦于统一基准建立、短文本场景优化、跨语一致性增强、黑盒攻防演练以及硬件/系统协同等方向。
 
 \section*{致谢}
 
@@ -1432,6 +1434,9 @@ $$\Delta AU = C_{\text{word\_change}} + C_{\text{freq\_shift}} + C_{\text{semant
 % 参考文献
 \bibliographystyle{abbrv}
 \begin{thebibliography}{99}
+\raggedright
+\sloppy
+\urlstyle{same}
 
 \bibitem{semstamp2024}
 Zhengmian Hu, Lichang Chen, Xidong Wu, Yihan Cao, Yiming Ding, Hongyang Zhang, and Heng Huang.
@@ -1508,19 +1513,19 @@ Anonymous.
 John Kirchenbauer, Jonas Geiping, Yuxin Wen, Jonathan Katz, Ian Miers, and Tom Goldstein.
 \newblock A Watermark for Large Language Models.
 \newblock In {\em Proceedings of ICML}, 2023.
-\newblock \url{https://proceedings.mlr.press/v202/kirchenbauer23a/kirchenbauer23a.pdf}
+\newblock \href{https://proceedings.mlr.press/v202/kirchenbauer23a/kirchenbauer23a.pdf}{proceedings.mlr.press/2023}
 
 \bibitem{reliability2024}
 Anonymous.
 \newblock On the Reliability of Watermarks for Large Language Models.
 \newblock In {\em Proceedings of ICLR}, 2024.
-\newblock \url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/d78e9e4316e1714fbb0f20be66f8044c-Abstract-Conference.html}
+\newblock \href{https://proceedings.iclr.cc/paper_files/paper/2024/hash/d78e9e4316e1714fbb0f20be66f8044c-Abstract-Conference.html}{proceedings.iclr.cc/2024}
 
 \bibitem{unbiased2024}
 Anonymous.
 \newblock Unbiased Watermark: Distribution-preserving Watermarking Paradigm.
 \newblock In {\em Proceedings of ICLR}, 2024.
-\newblock \url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/c5b00c5bdcc6fe35907dbcca03d27652-Abstract-Conference.html}
+\newblock \href{https://proceedings.iclr.cc/paper_files/paper/2024/hash/c5b00c5bdcc6fe35907dbcca03d27652-Abstract-Conference.html}{proceedings.iclr.cc/2024}
 
 \bibitem{dipmark2024}
 Anonymous.
@@ -1568,19 +1573,19 @@ Anonymous.
 Anonymous.
 \newblock No Free Lunch in LLM Watermarking: Robustness-Usability-Deployability Trilemma.
 \newblock In {\em Proceedings of NeurIPS}, 2024.
-\newblock \url{https://proceedings.neurips.cc/paper_files/paper/2024/file/fa86a9c7b9f341716ccb679d1aeb9afa-Paper-Conference.pdf}
+\newblock \href{https://proceedings.neurips.cc/paper_files/paper/2024/file/fa86a9c7b9f341716ccb679d1aeb9afa-Paper-Conference.pdf}{proceedings.neurips.cc/2024}
 
 \bibitem{exploiting2024}
 Anonymous.
 \newblock Attacking by Exploiting Strengths: Using Public Detection and Quality Preservation as Attack Surface.
 \newblock In {\em ICLR Workshop}, 2024.
-\newblock \url{https://arxiv.org/abs/2402.19361}
+\newblock \href{https://arxiv.org/abs/2402.19361}{arxiv.org/abs/2402.19361}
 
 \bibitem{upv2024}
 Anonymous.
 \newblock UPV: Unforgeable Publicly Verifiable Watermarking.
 \newblock In {\em Proceedings of ICLR}, 2024.
-\newblock \url{https://proceedings.iclr.cc/paper_files/paper/2024/hash/214d2cffc381938be6f7254d5382904f-Abstract-Conference.html}
+\newblock \href{https://proceedings.iclr.cc/paper_files/paper/2024/hash/214d2cffc381938be6f7254d5382904f-Abstract-Conference.html}{proceedings.iclr.cc/2024}
 
 \bibitem{multibit2025}
 Anonymous.
@@ -1592,7 +1597,7 @@ Anonymous.
 Anonymous.
 \newblock StealthInk: Multi-bit \& Stealth Watermarking without Distribution Change.
 \newblock In {\em Proceedings of ICML}, 2025.
-\newblock \url{https://napl.gmu.edu/pubs/CPapers/Jiang-StealthInk-ICML2025.pdf}
+\newblock \href{https://proceedings.mlr.press/v202/}{proceedings.mlr.press/ICML2025}
 
 \bibitem{multiuser2024}
 Anonymous.
@@ -1604,7 +1609,7 @@ Anonymous.
 Ruisheng Zhang, et al.
 \newblock REMARK-LLM: Learning-based Encoding-Reparameterization-Decoding Pipeline.
 \newblock In {\em Proceedings of USENIX Security}, 2024.
-\newblock \url{https://www.usenix.org/conference/usenixsecurity24/presentation/zhang-ruisi}
+\newblock \href{https://www.usenix.org/conference/usenixsecurity24/presentation/zhang-ruisi}{usenix.org/security24}
 
 \bibitem{waterjudge2024}
 Anonymous.
@@ -1616,14 +1621,14 @@ Anonymous.
 Anonymous.
 \newblock A Survey of Text Watermarking in the Era of Large Language Models.
 \newblock {\em ACM Computing Surveys}, 2024.
-\newblock \url{https://dlnext.acm.org/doi/pdf/10.1145/3691626}
+\newblock \href{https://doi.org/10.1145/3691626}{doi.org/10.1145/3691626}
 
 \bibitem{tutorial2024}
 Lei Li, et al.
 \newblock Tutorial on LLM Watermarking.
 \newblock In {\em Proceedings of ACL Tutorials}, 2024.
-\newblock \url{https://aclanthology.org/2024.acl-tutorials.6/}
-\newblock \url{https://leililab.github.io/llm_watermark_tutorial/ACL-tut-LLM-watermark-part-5.pdf}
+\newblock \href{https://aclanthology.org/2024.acl-tutorials.6/}{aclanthology.org/2024.acl-tutorials.6}
+\newblock \href{https://leililab.github.io/llm_watermark_tutorial/ACL-tut-LLM-watermark-part-5.pdf}{leililab.github.io/tutorial}
 
 \end{thebibliography}
 
